@@ -9,25 +9,25 @@ using WebAPI.Models;
 
 namespace WebAPI.Controllers
 {
-    [Route("api/TblCategoryController")]
+    [Route("api/TblCategories")]
     [ApiController]
-    public class TblCategoryController : ControllerBase
+    public class TblCategoriesController : ControllerBase
     {
         private readonly canteenSystemContext _context;
 
-        public TblCategoryController(canteenSystemContext context)
+        public TblCategoriesController(canteenSystemContext context)
         {
             _context = context;
         }
 
-        // GET: api/TblCategory
+        // GET: api/TblCategories
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblCategory>>> GetTblCategories()
         {
             return await _context.TblCategories.ToListAsync();
         }
 
-        // GET: api/TblCategory/5
+        // GET: api/TblCategories/5
         [HttpGet("{id}")]
         public async Task<ActionResult<TblCategory>> GetTblCategory(int id)
         {
@@ -41,7 +41,7 @@ namespace WebAPI.Controllers
             return tblCategory;
         }
 
-        // PUT: api/TblCategory/5
+        // PUT: api/TblCategories/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTblCategory(int id, TblCategory tblCategory)
@@ -72,7 +72,7 @@ namespace WebAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/TblCategory
+        // POST: api/TblCategories
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<TblCategory>> PostTblCategory(TblCategory tblCategory)
@@ -97,7 +97,7 @@ namespace WebAPI.Controllers
             return CreatedAtAction("GetTblCategory", new { id = tblCategory.FldCategoryTypeId }, tblCategory);
         }
 
-        // DELETE: api/TblCategory/5
+        // DELETE: api/TblCategories/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTblCategory(int id)
         {
