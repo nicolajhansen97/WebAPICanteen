@@ -1,5 +1,4 @@
 function idleLogout() {
-
     var timer;
     window.onload = resetTimer; //When window is loaded
     window.onmousemove = resetTimer; //When mouse is moved
@@ -18,12 +17,20 @@ function idleLogout() {
         timer = setTimeout(resetToIndexFunction, 20000);  // time is in milliseconds
     }
 }
-idleLogout();
 
+
+function getTable(tableName) {
+   
+
+    var host = 'https://localhost:5001/api/'
+    host = host + tableName;
     $.ajax({
         type: "GET",
         dataType: "json",
-        url: "https://localhost:5001/api/TblCategories"
+        url: host
     }).then(function (data) {
         alert(JSON.stringify(data))
     })
+}
+
+
