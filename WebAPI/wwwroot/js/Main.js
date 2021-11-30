@@ -38,24 +38,26 @@ async function test(tableName) {
     const data = await getTable(tableName)
 
     document.getElementById('ITEMS').innerHTML = `
-        <h1 class="B-Title">BreakFast Items</h1>
+        <h1 class="B-Title">BreakFast Items</h1><br></br>
         <p>${data.map(function (food) {
             return `
+                <div class = 'itemDesign'>
                 <p>${food.fldItemname}</p>
-                <img src="${getImageUrl(food.fldImage)}" alt="FOOD PIC">
+                <img class='imagesizing' src="IMG/${food.fldImage}" alt="FOOD PIC">
                 <p>${food.fldItemDescription}</p><br>
                 <p>${food.fldPrice} kr</p>
-                <button>add to cart</button>
+                
+                </div>
             `
 
-        }).join('')}</p>
+        }).join('')}</p><br></br>
     `
-    console.log(data)
 }
-
-function getImageUrl(picName) {
-    //alert(picName)
-    return ""
+let array = [];
+function addToBasket(food) {
+  
+    array.push(food);
+    console.log(array);
 }
 
 
