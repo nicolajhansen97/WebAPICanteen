@@ -47,7 +47,7 @@ async function test(tableName) {
                 <img class='imagesizing' src="IMG/${food.fldImage}" alt="FOOD PIC">
                 <p>${food.fldItemDescription}</p><br>
                 <p>${food.fldPrice} kr</p>
-                <button onclick='addToBasket(${item})')>Add to basket</button>
+                <button onclick='addToBasket(${item})'>Add to basket</button>
                 </div>
             `
         }).join('')}</p><br></br>
@@ -59,6 +59,11 @@ let array = []
 function addToBasket(Item) {
     array.push(Item)
     console.log(array)
+    sessionStorage.myobject = JSON.stringify(array)
+}
+
+function test2() {
+    localStorage.setItem('key', array)
 }
 
 
