@@ -19,3 +19,11 @@ function idleLogout() {
     }
 }
 idleLogout();
+
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: "https://localhost:5001/api/TblCategories"
+    }).then(function (data) {
+        alert(JSON.stringify(data))
+    })
