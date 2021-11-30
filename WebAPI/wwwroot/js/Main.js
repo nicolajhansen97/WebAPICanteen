@@ -40,26 +40,25 @@ async function test(tableName) {
     document.getElementById('ITEMS').innerHTML = `
         <h1 class="B-Title">BreakFast Items</h1><br></br>
         <p>${data.map(function (food) {
-            var item = food
+            var item = JSON.stringify(food)
             return `
                 <div class = 'itemDesign'>
-                <p>${item.fldItemname}</p>
-                <img class='imagesizing' src="IMG/${item.fldImage}" alt="FOOD PIC">
-                <p>${item.fldItemDescription}</p><br>
-                <p>${item.fldPrice} kr</p>
-                <button onclick="addToBasket(${JSON.stringify(item)})">Add to basket</button>
+                <p>${food.fldItemname}</p>
+                <img class='imagesizing' src="IMG/${food.fldImage}" alt="FOOD PIC">
+                <p>${food.fldItemDescription}</p><br>
+                <p>${food.fldPrice} kr</p>
+                <button onclick='addToBasket(${item})')>Add to basket</button>
                 </div>
             `
         }).join('')}</p><br></br>
     `
     //console.log(data[0])
 }
-//let array = []
+let array = []
 
 function addToBasket(Item) {
-    var Item2 = JSON.parse(Item)
-    //array.push(food)
-    console.log(Item2)
+    array.push(Item)
+    console.log(array)
 }
 
 
