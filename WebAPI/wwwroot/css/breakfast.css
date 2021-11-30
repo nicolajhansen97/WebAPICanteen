@@ -23,3 +23,7 @@ h1 {
     place-items: center;
     overflow: scroll;
 }
+
+.btn-basket{
+    text-align:center;
+}
