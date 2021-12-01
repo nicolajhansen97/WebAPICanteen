@@ -84,27 +84,61 @@ function addJsonBreakfast(food) {
         <p>${food.fldItemname}</p>
         <img class='imagesizing' src="IMG/${food.fldImage}" alt="FOOD PIC">
         <p>${food.fldItemDescription}</p><br>
-        <p>${food.fldPrice} kr</p> `
+        <p class="cart-price">${food.fldPrice} kr</p> `
 }
 
 let total = 0
+let i
 
-function makeShoppingCart(data) {
-    var i = 0
-    document.getElementById('shopCartItems').innerHTML = `
+
+async function makeShoppingCart(data) {
+    i = 0
+    console.log(1)
+    document.getElementById('shopCartItems').innerHTML = await `
         <h1 class="B-Title">Shopping Cart Items</h1><br></br>
         ${data[0].map(function (food) {
             i++
-            var item = JSON.stringify(food)
             total = total + food.fldPrice * data[1][i - 1]
             return `
-                <div class = 'itemDesign'>
+                <div class="itemDesign">
                 ${addJsonBreakfast(food)}
-                <input type="number" value="${data[1][i - 1]}"></input>
+                <input class="Cart-Input" type="number" value="${data[1][i - 1]}"></input>
                 </div>
             `
         }).join('')}<br></br>
-        <h2>Total: ${total} kr</h2>
+        <h2 class="cart-TOTAL">Total: ${total} kr</h2>
     `
-    console.log(total)
+    console.log(2)
+    var inputs = document.getElementsByClassName('Cart-Input')
+    for (var i = 0; i < inputs.length; i++) {
+        console.log("3")
+        var input = inputs[i]
+        input.addEventListener('change', quantityChanged)
+    }
+}
+
+function quantityChanged(event) {
+    console.log("4")
+    var input = event.target
+    if (isNaN(input.value) || input.value <= 0) {
+        input.value = 1
+    }
+    updateTotal()
+}
+
+async function updateTotal() {
+    console.log("5")
+    var mainDiv = await document.getElementById('shopCartItems')
+    var secondDivs = mainDiv.getElementsByClassName('itemDesign')
+    var total = 0
+    for (var i = 0; i < secondDivs.length; i++) {
+        var div = secondDivs[i]
+        var priceElement = div.getElementsByClassName('cart-price')[0]
+        var quantityElement = div.getElementsByClassName('Cart-Input')[0]
+        var price = parseFloat(priceElement.innerText.replace(' kr', ''))
+        var quantity = quantityElement.value
+        total = total + (price*quantity)
+    }
+    total = Math.round(total * 100) / 100
+    document.getElementsByClassName('cart-TOTAL')[0].innerText = total + 'kr'
 }

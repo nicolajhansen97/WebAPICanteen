@@ -66,6 +66,11 @@ h1 {
 
 #shopCartItems {
     place-items: center;
+    text-align:center;
+}
+
+.cart-TOTAL{
+    text-align:center;
 }
 
 .btn-basket {
