@@ -52,36 +52,30 @@ async function GetBreakFastItems(tableName) {
     `
     //console.log(data[0])
 }
-let array = []
+let array = [[], []]
+//let array2 = []
 
 function addToBasket(Item) {
 
     var isItem = true
+    var i = 0
 
-    var object = [
-        {
-            Item
-        }
-    ];
-
-    const NewData = {
-        count: 0
-    }
-    object.push(NewData)
-
-    console.log(object[1].count)
-
-    array.forEach(ArrayItem => {
+    array[0].forEach(ArrayItem => {
         if (Item.fldItemInfoId === ArrayItem.fldItemInfoId) {
-            isItem = false
 
+            isItem = false
+            //array2[i]++    
+            array[1][i]++
         }
+        i++
     })
     if (isItem) {
-        array.push(Item)
+        array[0].push(Item)
+        array[1].push(1)
+        //array2.push(1)
     }
+    console.log(JSON.stringify(array[0]) + " " + array[1])
 
-    console.log(array)
     sessionStorage.myobject = JSON.stringify(array)
 }
 
@@ -93,17 +87,24 @@ function addJsonBreakfast(food) {
         <p>${food.fldPrice} kr</p> `
 }
 
+let total = 0
+
 function makeShoppingCart(data) {
+    var i = 0
     document.getElementById('shopCartItems').innerHTML = `
         <h1 class="B-Title">Shopping Cart Items</h1><br></br>
-        ${data.map(function (food) {
-        var item = JSON.stringify(food)
-        return `
+        ${data[0].map(function (food) {
+            i++
+            var item = JSON.stringify(food)
+            total = total + food.fldPrice * data[1][i - 1]
+            return `
                 <div class = 'itemDesign'>
                 ${addJsonBreakfast(food)}
+                <input type="number" value="${data[1][i - 1]}"></input>
                 </div>
             `
-    }).join('')}<br></br>
+        }).join('')}<br></br>
+        <h2>Total: ${total} kr</h2>
     `
-    //console.log(data[0])
+    console.log(total)
 }
