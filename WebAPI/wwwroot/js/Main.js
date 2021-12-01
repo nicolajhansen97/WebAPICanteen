@@ -43,10 +43,7 @@ async function test(tableName) {
             var item = JSON.stringify(food)
             return `
                 <div class = 'itemDesign'>
-                <p>${food.fldItemname}</p>
-                <img class='imagesizing' src="IMG/${food.fldImage}" alt="FOOD PIC">
-                <p>${food.fldItemDescription}</p><br>
-                <p>${food.fldPrice} kr</p>
+                ${addJsonBreakfast(food)}
                 <button onclick='addToBasket(${item})'>Add to basket</button>
                 </div>
             `
@@ -62,8 +59,25 @@ function addToBasket(Item) {
     sessionStorage.myobject = JSON.stringify(array)
 }
 
-function test2() {
-    localStorage.setItem('key', array)
+function addJsonBreakfast(food) {
+    return `
+        <p>${food.fldItemname}</p>
+        <img class='imagesizing' src="IMG/${food.fldImage}" alt="FOOD PIC">
+        <p>${food.fldItemDescription}</p><br>
+        <p>${food.fldPrice} kr</p> `
 }
 
-
+function makeShoppingCart(data) {
+    document.getElementById('shopCartItems').innerHTML = `
+        <h1 class="B-Title">Shopping Cart Items</h1><br></br>
+        ${data.map(function (food) {
+        var item = JSON.stringify(food)
+        return `
+                <div class = 'itemDesign'>
+                ${addJsonBreakfast(food)}
+                </div>
+            `
+    }).join('')}<br></br>
+    `
+    //console.log(data[0])
+}
