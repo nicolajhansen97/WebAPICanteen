@@ -17,14 +17,15 @@
         </div>
         <div class="fillOut"></div>
     </div>
-    <div id="shopCartItems">
-    </div>
+
+    <div id="shopCartItems"></div>
+
     <script src="js/jquery-3.6.0.min.js"></script>
     <script src="JS/Main.js"></script>
     <script>
         window.onload = function () {
             idleLogout();
-            var shop = JSON.parse(sessionStorage.myobject)
+            var shop = JSON.parse(sessionStorage.myobject) //JSON.parse()
             makeShoppingCart(shop)
         }
     </script>

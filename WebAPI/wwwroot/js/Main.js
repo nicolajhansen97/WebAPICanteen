@@ -33,13 +33,14 @@ async function getTable(tableName) {
     return data
 }
 
-async function test(tableName) {
+async function GetBreakFastItems(tableName) {
 
     const data = await getTable(tableName)
 
     document.getElementById('ITEMS').innerHTML = `
         <h1 class="B-Title">BreakFast Items</h1><br></br>
         <p>${data.map(function (food) {
+            if (food.fldCategoryTypeId === 2) return
             var item = JSON.stringify(food)
             return `
                 <div class = 'itemDesign'>
@@ -54,7 +55,32 @@ async function test(tableName) {
 let array = []
 
 function addToBasket(Item) {
-    array.push(Item)
+
+    var isItem = true
+
+    var object = [
+        {
+            Item
+        }
+    ];
+
+    const NewData = {
+        count: 0
+    }
+    object.push(NewData)
+
+    console.log(object[1].count)
+
+    array.forEach(ArrayItem => {
+        if (Item.fldItemInfoId === ArrayItem.fldItemInfoId) {
+            isItem = false
+
+        }
+    })
+    if (isItem) {
+        array.push(Item)
+    }
+
     console.log(array)
     sessionStorage.myobject = JSON.stringify(array)
 }
