@@ -6,42 +6,43 @@
     <link rel="stylesheet" href="CSS/standard.css">
     <link rel="stylesheet" href="CSS/frontpage.css">
     <link rel="icon" type="image/x-icon" href="/IMG/favicon.ico">
-    <script src="js/jquery-3.6.0.min.js" type="text/javascript"></script>
-    <script src="JS/Main.js">
-        window.onload = function() {
-            idleLogout();
-        }
-    </script>
 </head>
 <body>
 
 
-<div class="header">
+    <div class="header">
 
-    <div class="cancelOrder">
-        <img onclick="location.href='index.html';" style="cursor:pointer;" src="IMG/cancel.png">
+        <div class="cancelOrder">
+            <img onclick="Logout()" style="cursor:pointer;" src="IMG/cancel.png">
 
+        </div>
+        <div class="logo">
+            <img src="IMG/logo.png" width="300">
+        </div>
+
+        <div class="shoppingCart">
+            <img onclick="location.href='shoppingcart.html';" style="cursor:pointer;" src="IMG/shoppingCart.png">
+        </div>
     </div>
-<div class="logo">
-    <img src="IMG/logo.png" width="300">
-</div>
 
-<div class="shoppingCart">
-    <img onclick="location.href='shoppingcart.html';" style="cursor:pointer;" src="IMG/shoppingCart.png">
-</div>
-</div>
+    <div onclick="location.href='breakfast.html';" style="cursor:pointer;" class="breakfast">
+        <div class="menuText"><a>Breakfast</a></div>
+    </div>
 
-<div onclick="location.href='breakfast.html';" style="cursor:pointer;" class ="breakfast">
-    <div class="menuText"><a>Breakfast</a></div>
-</div>
+    <div onclick="location.href='lunch.html';" style="cursor:pointer;" class="lunch">
+        <div class="menuText"><a>Lunch</a></div>
+    </div>
 
-<div onclick="location.href='lunch.html';" style="cursor:pointer;" class ="lunch">
-    <div class="menuText"><a>Lunch</a></div>
-</div>
+    <div onclick="location.href='others.html';" style="cursor:pointer;" class="others">
+        <div class="menuText"><a>Others</a></div>
+    </div>
 
-<div onclick="location.href='others.html';" style="cursor:pointer;" class ="others">
-    <div class="menuText"><a>Others</a></div>
-</div>
-
+    <script src="js/jquery-3.6.0.min.js" type="text/javascript"></script>
+    <script src="JS/Main.js"></script>
+    <script>
+        window.onload = function () {
+            idleLogout();
+        }
+    </script>
 </body>
 </html>

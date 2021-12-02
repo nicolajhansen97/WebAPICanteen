@@ -1,3 +1,4 @@
+//@auther: Nicolaj
 function idleLogout() {
     var timer;
     window.onload = resetTimer; //When window is loaded
@@ -6,19 +7,25 @@ function idleLogout() {
     window.ontouchstart = resetTimer; //Touch for touchscreens
     window.onclick = resetTimer;      // catches touchpad clicks as well
 
-
-
+    //@auther: Nicolaj
     function resetToIndexFunction() {
-      window.location.href = 'index.html';
+        window.location.href = 'index.html';
+        sessionStorage.clear()
     }
-
+    //@auther: Nicolaj
     function resetTimer() {
         clearTimeout(timer);
         timer = setTimeout(resetToIndexFunction, 20000);  // time is in milliseconds
     }
 }
 
+//@auther: Niels and Rasmus
+function Logout() {
+    location.href = 'index.html';
+    sessionStorage.clear()
+}
 
+//@auther: Niels and Rasmus
 async function getTable(tableName) {
    var host = 'https://localhost:5001/api/'
     host = host + tableName;
@@ -33,6 +40,7 @@ async function getTable(tableName) {
     return data
 }
 
+//@auther: Niels and Rasmus
 async function GetBreakFastItems(tableName) {
 
     const data = await getTable(tableName)
@@ -50,11 +58,9 @@ async function GetBreakFastItems(tableName) {
             `
         }).join('')}</p><br></br>
     `
-    //console.log(data[0])
 }
 
-//let array2 = []
-
+//@auther: Niels and Rasmus
 function addToBasket(Item) {
 
     var isItem = true
@@ -82,16 +88,12 @@ function addToBasket(Item) {
         //array2.push(1)
     }
     console.log(JSON.stringify(array[0]) + " " + array[1])
-    //console.log(sessionStorage.myobject)
-    //array.push(sessionStorage.myobject) 
-    //sessionStorage.myobject = JSON.stringify(array)
-   
+
     // Store
     sessionStorage.setItem("items", JSON.stringify(array));
-    // Retrieve
-    //document.getElementById("result").innerHTML = sessionStorage.getItem("lastname");
 }
 
+//@auther: Niels and Rasmus
 function addJsonBreakfast(food) {
     return `
         <p class="foodTitle">${food.fldItemname}</p>
@@ -101,11 +103,10 @@ function addJsonBreakfast(food) {
 }
 
 let total = 0
-let i
 
-
+//@auther: Niels and Rasmus
 async function makeShoppingCart(data) {
-    i = 0
+   var i = 0
     console.log(1)
     document.getElementById('shopCartItems').innerHTML = await `
         <h1 class="B-Title">Shopping Cart Items</h1><br></br>
@@ -136,17 +137,27 @@ async function makeShoppingCart(data) {
     }
 }
 
+//@auther: Niels and Rasmus
 function quantityChanged(event) {
-    console.log("4")
     var input = event.target
     if (isNaN(input.value) || input.value <= 0) {
         input.value = 1
     }
+    //update session
+    var tempStorage = JSON.parse(sessionStorage.getItem("items"))
+    for (var i = 0; i < tempStorage[0].length; i++) {
+        if (tempStorage[0][i].fldItemname === input.parentElement.getElementsByClassName('foodTitle')[0].innerText) {
+            tempStorage[1][i] = input.value
+        }
+    }
+    sessionStorage.setItem("items", JSON.stringify(tempStorage));
     updateTotal()
 }
 
+//@auther: Niels and Rasmus
 function itemDeleted(event) {
     var input = event.target
+    //session
     var tempStorage = JSON.parse(sessionStorage.getItem("items"))
     for (var i = 0; i < tempStorage[0].length; i++) {
         if (tempStorage[0][i].fldItemname === input.parentElement.getElementsByClassName('foodTitle')[0].innerText) {
@@ -155,10 +166,12 @@ function itemDeleted(event) {
         }
     }
     sessionStorage.setItem("items", JSON.stringify(tempStorage));
+    //delete from html
     input.parentElement.remove()
     updateTotal()
 }
 
+//@auther: Niels and Rasmus
 async function updateTotal() {
     console.log("5")
     var mainDiv = await document.getElementById('shopCartItems')
