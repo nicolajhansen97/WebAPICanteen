@@ -52,13 +52,20 @@ async function GetBreakFastItems(tableName) {
     `
     //console.log(data[0])
 }
-let array = [[], []]
+
 //let array2 = []
 
 function addToBasket(Item) {
 
     var isItem = true
     var i = 0
+
+    var array = sessionStorage.getItem('items');
+    if (!array) { // check if an item is already registered
+        array = [[], []]; // if not, we initiate an empty array
+    } else {
+        array = JSON.parse(array); // else parse whatever is in
+    }
 
     array[0].forEach(ArrayItem => {
         if (Item.fldItemInfoId === ArrayItem.fldItemInfoId) {
@@ -75,13 +82,19 @@ function addToBasket(Item) {
         //array2.push(1)
     }
     console.log(JSON.stringify(array[0]) + " " + array[1])
-
-    sessionStorage.myobject = JSON.stringify(array)
+    //console.log(sessionStorage.myobject)
+    //array.push(sessionStorage.myobject) 
+    //sessionStorage.myobject = JSON.stringify(array)
+   
+    // Store
+    sessionStorage.setItem("items", JSON.stringify(array));
+    // Retrieve
+    //document.getElementById("result").innerHTML = sessionStorage.getItem("lastname");
 }
 
 function addJsonBreakfast(food) {
     return `
-        <p>${food.fldItemname}</p>
+        <p class="foodTitle">${food.fldItemname}</p>
         <img class='imagesizing' src="IMG/${food.fldImage}" alt="FOOD PIC">
         <p>${food.fldItemDescription}</p><br>
         <p class="cart-price">${food.fldPrice} kr</p> `
@@ -103,6 +116,7 @@ async function makeShoppingCart(data) {
                 <div class="itemDesign">
                 ${addJsonBreakfast(food)}
                 <input class="Cart-Input" type="number" value="${data[1][i - 1]}"></input>
+                <button class="btnRemove" >Delete item</button>
                 </div>
             `
         }).join('')}<br></br>
@@ -115,6 +129,11 @@ async function makeShoppingCart(data) {
         var input = inputs[i]
         input.addEventListener('change', quantityChanged)
     }
+    var deleteBtn = document.getElementsByClassName('btnRemove')
+    for (var i = 0; i < deleteBtn.length; i++) {
+        var btn = deleteBtn[i]
+        btn.addEventListener('click', itemDeleted)
+    }
 }
 
 function quantityChanged(event) {
@@ -123,6 +142,20 @@ function quantityChanged(event) {
     if (isNaN(input.value) || input.value <= 0) {
         input.value = 1
     }
+    updateTotal()
+}
+
+function itemDeleted(event) {
+    var input = event.target
+    var tempStorage = JSON.parse(sessionStorage.getItem("items"))
+    for (var i = 0; i < tempStorage[0].length; i++) {
+        if (tempStorage[0][i].fldItemname === input.parentElement.getElementsByClassName('foodTitle')[0].innerText) {
+            tempStorage[0].splice(i, 1)
+            tempStorage[1].splice(i, 1)
+        }
+    }
+    sessionStorage.setItem("items", JSON.stringify(tempStorage));
+    input.parentElement.remove()
     updateTotal()
 }
 
@@ -142,3 +175,4 @@ async function updateTotal() {
     total = Math.round(total * 100) / 100
     document.getElementsByClassName('cart-TOTAL')[0].innerText = total + 'kr'
 }
+

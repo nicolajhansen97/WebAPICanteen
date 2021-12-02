@@ -25,7 +25,7 @@
     <script>
         window.onload = function () {
             idleLogout();
-            var shop = JSON.parse(sessionStorage.myobject) //JSON.parse()
+            var shop = JSON.parse(sessionStorage.getItem("items")) 
             makeShoppingCart(shop)
         }
     </script>
