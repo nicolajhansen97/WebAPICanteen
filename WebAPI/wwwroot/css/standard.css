@@ -61,12 +61,23 @@ h1 {
 }
 
 #ITEMS {
-    place-items: center;
+    /*place-items: center;*/
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.itemDesign{
+    margin: 30px;
 }
 
 #shopCartItems {
-    place-items: center;
-    text-align:center;
+    /* place-items: center;*/
+    text-align: center;
+}
+
+#shopCartItems>ul>li {
+    list-style:none;
 }
 
 .cart-TOTAL{
@@ -75,4 +86,10 @@ h1 {
 
 .btn-basket {
     text-align: center;
+}
+.B-Header {
+    font-weight: normal;
+    color: #333;
+    text-align: center;
+    font-size: 2.5em;
 }

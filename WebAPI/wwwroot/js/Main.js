@@ -46,8 +46,7 @@ async function GetBreakFastItems(tableName) {
     const data = await getTable(tableName)
 
     document.getElementById('ITEMS').innerHTML = `
-        <h1 class="B-Title">BreakFast Items</h1><br></br>
-        <p>${data.map(function (food) {
+        ${data.map(function (food) {
             if (food.fldCategoryTypeId === 2) return
             var item = JSON.stringify(food)
             return `
@@ -56,7 +55,7 @@ async function GetBreakFastItems(tableName) {
                 <button onclick='addToBasket(${item})'>Add to basket</button>
                 </div>
             `
-        }).join('')}</p><br></br>
+        }).join('')}
     `
 }
 
@@ -109,18 +108,20 @@ async function makeShoppingCart(data) {
    var i = 0
     console.log(1)
     document.getElementById('shopCartItems').innerHTML = await `
-        <h1 class="B-Title">Shopping Cart Items</h1><br></br>
+        <ul>
         ${data[0].map(function (food) {
             i++
             total = total + food.fldPrice * data[1][i - 1]
             return `
-                <div class="itemDesign">
-                ${addJsonBreakfast(food)}
-                <input class="Cart-Input" type="number" value="${data[1][i - 1]}"></input>
-                <button class="btnRemove" >Delete item</button>
-                </div>
+                <li>
+                    <div class="itemDesign">
+                    ${addJsonBreakfast(food)}
+                    <input class="Cart-Input" type="number" value="${data[1][i - 1]}"></input>
+                    <button class="btnRemove" >Delete item</button>
+                    </div>
+                </li>
             `
-        }).join('')}<br></br>
+        }).join('')}</ul>
         <h2 class="cart-TOTAL">Total: ${total} kr</h2>
     `
     console.log(2)
