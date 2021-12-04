@@ -69,6 +69,11 @@ namespace WebAPI.Models
                     .HasColumnType("date")
                     .HasColumnName("fldBirhdate");
 
+                entity.Property(e => e.FldCardNumber)
+                    .HasMaxLength(30)
+                    .IsUnicode(false)
+                    .HasColumnName("fldCardNumber");
+
                 entity.Property(e => e.FldEmail)
                     .HasMaxLength(50)
                     .IsUnicode(false)
@@ -158,6 +163,11 @@ namespace WebAPI.Models
                     .HasMaxLength(80)
                     .IsUnicode(false)
                     .HasColumnName("fldMenu");
+
+                entity.Property(e => e.FldMenuDescription)
+                    .HasMaxLength(300)
+                    .IsUnicode(false)
+                    .HasColumnName("fldMenuDescription");
             });
 
             modelBuilder.Entity<TblLunchBooking>(entity =>

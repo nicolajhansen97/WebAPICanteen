@@ -19,6 +19,7 @@ namespace WebAPI.Models
         public string FldEmail { get; set; }
         public DateTime? FldBirhdate { get; set; }
         public string FldPhone { get; set; }
+        public string FldCardNumber { get; set; }
 
         public virtual ICollection<TblFavoriteItem> TblFavoriteItems { get; set; }
         public virtual ICollection<TblLunchBooking> TblLunchBookings { get; set; }

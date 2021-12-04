@@ -14,6 +14,7 @@ namespace WebAPI.Models
 
         public DateTime FldDate { get; set; }
         public string FldMenu { get; set; }
+        public string FldMenuDescription { get; set; }
 
         public virtual ICollection<TblLunchBooking> TblLunchBookings { get; set; }
     }
