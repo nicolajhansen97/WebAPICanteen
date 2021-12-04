@@ -21,6 +21,8 @@
     <div>
         <h1 class="B-Header">Shopping Cart Items</h1>
         <div id="shopCartItems"></div>
+        <h2 class="cart-TOTAL">Total: 0 kr</h2>
+        <button id="cart-purchase">Order Items</button>
     </div>
 
     <script src="js/jquery-3.6.0.min.js"></script>
@@ -28,6 +30,7 @@
     <script>
         window.onload = function () {
             idleLogout();
+            loadPurchaseBTN()
             var shop = JSON.parse(sessionStorage.getItem("items")) 
             makeShoppingCart(shop)
         }

@@ -1,3 +1,22 @@
+const APIurl = 'https://localhost:5001/api/'
+
+
+//@author: Rasmus
+class ItemType {
+    static BreakFast = new ItemType(1)
+    static Other = new ItemType(2)
+
+    constructor(type) {
+        this.type = type
+    }
+}
+
+//@author: Rasmus
+function loadPurchaseBTN() {
+    document.getElementById('cart-purchase').addEventListener('click',
+        purchaseClicked)
+}
+
 //@auther: Nicolaj
 function idleLogout() {
     var timer;
@@ -27,7 +46,7 @@ function Logout() {
 
 //@auther: Niels and Rasmus
 async function getTable(tableName) {
-   var host = 'https://localhost:5001/api/'
+    var host = APIurl
     host = host + tableName;
     const data =  await $.ajax({
         type: "GET",
@@ -41,13 +60,13 @@ async function getTable(tableName) {
 }
 
 //@auther: Niels and Rasmus
-async function GetBreakFastItems(tableName) {
+async function GetFoodItems(tableName,type) {
 
     const data = await getTable(tableName)
 
     document.getElementById('ITEMS').innerHTML = `
         ${data.map(function (food) {
-            if (food.fldCategoryTypeId === 2) return
+            if (food.fldCategoryTypeId !== type.type) return
             var item = JSON.stringify(food)
             return `
                 <div class = 'itemDesign'>
@@ -58,6 +77,8 @@ async function GetBreakFastItems(tableName) {
         }).join('')}
     `
 }
+
+
 
 //@auther: Niels and Rasmus
 function addToBasket(Item) {
@@ -86,7 +107,7 @@ function addToBasket(Item) {
         array[1].push(1)
         //array2.push(1)
     }
-    console.log(JSON.stringify(array[0]) + " " + array[1])
+    //console.log(JSON.stringify(array[0]) + " " + array[1])
 
     // Store
     sessionStorage.setItem("items", JSON.stringify(array));
@@ -98,6 +119,15 @@ function addJsonBreakfast(food) {
         <p class="foodTitle">${food.fldItemname}</p>
         <img class='imagesizing' src="IMG/${food.fldImage}" alt="FOOD PIC">
         <p>${food.fldItemDescription}</p><br>
+        <p class="item-price">${food.fldPrice} kr</p> `
+}
+
+//@auther: Rasmus
+function addOrder(food) {
+    return `
+        <img class='cart-imagesizing' width="100" src="IMG/${food.fldImage}" alt="FOOD PIC">
+        <p class="cart-foodTitle">${food.fldItemname}</p>
+        <p class="cart-desc">${food.fldItemDescription}</p><br>
         <p class="cart-price">${food.fldPrice} kr</p> `
 }
 
@@ -105,29 +135,23 @@ let total = 0
 
 //@auther: Niels and Rasmus
 async function makeShoppingCart(data) {
-   var i = 0
-    console.log(1)
+    var i = 0
+    if (data === null) return
     document.getElementById('shopCartItems').innerHTML = await `
-        <ul>
         ${data[0].map(function (food) {
             i++
-            total = total + food.fldPrice * data[1][i - 1]
+            //total = total + food.fldPrice * data[1][i - 1]
             return `
-                <li>
-                    <div class="itemDesign">
-                    ${addJsonBreakfast(food)}
-                    <input class="Cart-Input" type="number" value="${data[1][i - 1]}"></input>
-                    <button class="btnRemove" >Delete item</button>
+                    <div class="cart-item-design">
+                        ${addOrder(food)}
+                        <input class="Cart-Input" type="number" value="${data[1][i - 1]}"></input>
+                        <button class="btnRemove" >Delete item</button>
                     </div>
-                </li>
             `
-        }).join('')}</ul>
-        <h2 class="cart-TOTAL">Total: ${total} kr</h2>
+        }).join('')}
     `
-    console.log(2)
     var inputs = document.getElementsByClassName('Cart-Input')
     for (var i = 0; i < inputs.length; i++) {
-        console.log("3")
         var input = inputs[i]
         input.addEventListener('change', quantityChanged)
     }
@@ -136,6 +160,7 @@ async function makeShoppingCart(data) {
         var btn = deleteBtn[i]
         btn.addEventListener('click', itemDeleted)
     }
+    updateTotal()
 }
 
 //@auther: Niels and Rasmus
@@ -147,7 +172,7 @@ function quantityChanged(event) {
     //update session
     var tempStorage = JSON.parse(sessionStorage.getItem("items"))
     for (var i = 0; i < tempStorage[0].length; i++) {
-        if (tempStorage[0][i].fldItemname === input.parentElement.getElementsByClassName('foodTitle')[0].innerText) {
+        if (tempStorage[0][i].fldItemname === input.parentElement.getElementsByClassName('cart-foodTitle')[0].innerText) {
             tempStorage[1][i] = input.value
         }
     }
@@ -161,7 +186,7 @@ function itemDeleted(event) {
     //session
     var tempStorage = JSON.parse(sessionStorage.getItem("items"))
     for (var i = 0; i < tempStorage[0].length; i++) {
-        if (tempStorage[0][i].fldItemname === input.parentElement.getElementsByClassName('foodTitle')[0].innerText) {
+        if (tempStorage[0][i].fldItemname === input.parentElement.getElementsByClassName('cart-foodTitle')[0].innerText) {
             tempStorage[0].splice(i, 1)
             tempStorage[1].splice(i, 1)
         }
@@ -174,9 +199,8 @@ function itemDeleted(event) {
 
 //@auther: Niels and Rasmus
 async function updateTotal() {
-    console.log("5")
     var mainDiv = await document.getElementById('shopCartItems')
-    var secondDivs = mainDiv.getElementsByClassName('itemDesign')
+    var secondDivs = mainDiv.getElementsByClassName('cart-item-design')
     var total = 0
     for (var i = 0; i < secondDivs.length; i++) {
         var div = secondDivs[i]
@@ -187,6 +211,50 @@ async function updateTotal() {
         total = total + (price*quantity)
     }
     total = Math.round(total * 100) / 100
-    document.getElementsByClassName('cart-TOTAL')[0].innerText = total + 'kr'
+    document.getElementsByClassName('cart-TOTAL')[0].innerText ='Total: ' + total + ' kr'
 }
 
+//@author: Rasmus
+function purchaseClicked() {
+    var cartItems = document.getElementById('shopCartItems')
+    if (!cartItems.hasChildNodes()) {
+        alert('No items in cart')
+        return
+    }
+    alert('Thank you for your purchase')
+
+    //get array of orders
+    var array = JSON.parse(sessionStorage.getItem("items"))
+    //loop post them
+    for (var i = 0; i < array[0].length; i++) {
+        for (var j = 0; j < array[1][i]; j++) {
+            console.log(array[0][i])
+            //post command to API WIP:NEED TO ADD JSONDATA
+            //postCartOrder("TblOrderLines", array[0][i])
+        }
+    }
+
+    //delete items in cart
+    while (cartItems.hasChildNodes()) {
+        cartItems.removeChild(cartItems.firstChild)
+    }
+    updateTotal()
+    //clear sessionStorage
+    sessionStorage.clear()
+    //Logout()
+}
+
+
+async function postCartOrder(tableName, JsonData) {
+    var host = APIurl
+    host = host + tableName;
+
+    var response = await fetch(host, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(JsonData)
+    })
+    console.log(response.json())
+}
