@@ -8,28 +8,29 @@
     <link rel="icon" type="image/x-icon" href="/IMG/favicon.ico">
 </head>
 <body>
-    <div class="header">
-        <div class="cancelOrder">
-            <img onclick="location.href='frontpage.html';" style="cursor:pointer;" src="IMG/back.png">
-        </div>
-        <div class="logo">
-            <img src="IMG/logo.png" width="300">
-        </div>
-        <div class="fillOut"></div>
-    </div>
-    
-    <div>
-        <h1 class="B-Header">Shopping Cart Items</h1>
-        <div id="shopCartItems"></div>
-        <h2 class="cart-TOTAL">Total: 0 kr</h2>
-        <button id="cart-purchase">Order Items</button>
-    </div>
+    <main id="app">
+        <header>
+            <div class="Items">
+                <div class="Item"><a href="frontpage.html"><img src="IMG/back.png" alt=""></a></div>
+                <div class="Item"><img class="logo-img" src="IMG/logo.png" alt=""></div>
+                <div class="Item"><h3 id="Employee"></h3></div>
+            </div>
+        </header>
 
+        <div>
+            <h1 class="B-Header">Shopping Cart Items</h1>
+            <div id="shopCartItems"></div>
+            <h2 class="cart-TOTAL">Total: 0 kr</h2>
+            <button id="cart-purchase">Order Items</button>
+        </div>
+
+    </main>
     <script src="js/jquery-3.6.0.min.js"></script>
     <script src="JS/Main.js"></script>
     <script>
         window.onload = function () {
             idleLogout();
+            loadEmployeeName()
             loadPurchaseBTN()
             var shop = JSON.parse(sessionStorage.getItem("items")) 
             makeShoppingCart(shop)

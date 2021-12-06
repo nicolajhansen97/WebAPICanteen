@@ -8,31 +8,31 @@
     <link rel="icon" type="image/x-icon" href="/IMG/favicon.ico">
 </head>
 <body>
-    <div class="header">
-        <div class="cancelOrder">
-            <img onclick="location.href='frontpage.html';" style="cursor:pointer;" src="IMG/back.png">
-        </div>
-        <div class="logo">
-            <img src="IMG/logo.png" width="300">
-        </div>
-        <div class="shoppingCart">
-            <img onclick="location.href='shoppingcart.html';" style="cursor:pointer;" src="IMG/shoppingCart.png">
-        </div>
-    </div>
+    <main id="app">
+        <div class="cart-icon"><a href="shoppingcart.html"><img src="IMG/shoppingCart.png" alt="" /></a></div>
+        <header>
+            <div class="Items">
+                <div class="Item"><a href="frontpage.html"><img src="IMG/back.png" alt=""></a></div>
+                <div class="Item"><img class="logo-img" src="IMG/logo.png" alt=""></div>
+                <div class="Item"><h3 id="Employee"></h3></div>
+            </div>
+        </header>
 
-    <div>
-        <h1 class="B-Header">Other Items</h1>
-        <div id="ITEMS"></div>
-    </div>
+        <div>
+            <h1 class="B-Header">Other Items</h1>
+            <div id="ITEMS"></div>
+        </div>
+    </main>
 
 
-    <script src="js/jquery-3.6.0.min.js"></script>
-    <script src="js/Main.js"></script>
-    <script>
-        window.onload = function () {
-            idleLogout();
-            GetFoodItems("TblItemInfoes", ItemType.Other)
-        }
-    </script>
+        <script src="js/jquery-3.6.0.min.js"></script>
+        <script src="js/Main.js"></script>
+        <script>
+            window.onload = function () {
+                idleLogout();
+                loadEmployeeName()
+                GetFoodItems("TblItemInfoes", ItemType.Other)
+            }
+        </script>
 </body>
 </html>

@@ -17,6 +17,17 @@ function loadPurchaseBTN() {
         purchaseClicked)
 }
 
+//@author: Rasmus
+function loadEmployeeName() {
+    var em = getEmployee()
+    document.getElementById('Employee').innerText = em.fldName
+}
+
+//@author: Rasmus
+function getEmployee() {
+    return JSON.parse(sessionStorage.getItem('EmployeeKey'))
+}
+
 //@auther: Nicolaj
 function idleLogout() {
     var timer;
@@ -221,7 +232,8 @@ function purchaseClicked() {
         alert('No items in cart')
         return
     }
-    alert('Thank you for your purchase')
+    var em = getEmployee()
+    alert('Thank you for your purchase ' + em.fldName)
 
     //get array of orders
     var array = JSON.parse(sessionStorage.getItem("items"))
@@ -257,4 +269,42 @@ async function postCartOrder(tableName, JsonData) {
         body: JSON.stringify(JsonData)
     })
     console.log(response.json())
+}
+
+let employees
+
+//@author: Rasmus
+//load input element in index. only activated in index.html with a onload
+async function LoginScreenLoadElements() {
+    var input = document.getElementById('Employee-password')
+    input.focus()
+    employees = await getTable('TblEmployees')
+    input.addEventListener('keypress', login)
+}
+
+//@author: Rasmus
+//gets input. then says in keypress enter
+//get a jsonfile of all employees, then check if the
+//input value is in the list of employees
+//if it is go through a loop check which employee it is
+//after it finds the person change page to frontpage and
+//save the employeeID in sessionstorage.
+async function login(event) {
+    var input = event.target
+    if (event.key === 'Enter') {
+        //logic for checking if it is an employee
+        if (employees.find(f => f.fldCardNumber === input.value)) {
+            for (var i = 0; i < employees.length; i++) {
+                if (input.value === employees[i].fldCardNumber) {
+                    console.log(employees[i].fldName + " Logged In")
+                    //go to frontpage
+                    location.href = 'frontpage.html'
+                    //save employee ID for use 
+                    sessionStorage.setItem('EmployeeKey', JSON.stringify(employees[i]))
+                }
+            }
+        } else {
+            alert("Invalid Card")
+        }
+    }
 }

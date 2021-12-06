@@ -8,22 +8,30 @@
     <link rel="stylesheet" href="CSS/frontsitesstyles.css">
 </head>
 <body>
-<div class="header">
-<div class="logo">
-<img src="IMG/logo.png" width="300">
-</div>
-</div>
-<div class="center">
-    <div class="welcome">
-        <a>Welcome to our canteen</a></div>
-
-        <div class="cardNumber">
-        <label>Scan your card</label></div>
-
-    <div class="testText">
-    <a href="frontpage.html">Click here - TEST VERSION!</a>
+    <header>
+        <div class="Login-Items">
+            <div><img class="logo-img" src="IMG/logo.png" alt=""></div>
+        </div>
+    </header>
+    <div class="center">
+        <div class="welcome">
+            <a>Welcome to our canteen</a>
         </div>
 
-</div>
+        <div class="cardNumber">
+            <label>Scan your card</label>
+        </div>
+
+        <div class="testText">
+            <input id="Employee-password" type="password" /><br />
+        </div>
+    </div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/Main.js"></script>
+    <script>
+        window.onload = async function () {
+            await LoginScreenLoadElements()
+        }
+    </script>
 </body>
 </html>
