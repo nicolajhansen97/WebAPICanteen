@@ -91,9 +91,9 @@ namespace WebAPI.Controllers
         {
             // Custom GUARD - Created by Niels & Nicolaj
             Microsoft.Extensions.Primitives.StringValues value = "";
-            Request.Headers.TryGetValue("ccp", out value);
+            Request.Headers.TryGetValue("ussr", out value);
 
-            if (value.Equals("admin"))
+            if (value.Equals("user"))
             {
                 _context.TblOrderLines.Add(tblOrderLine);
                 await _context.SaveChangesAsync();

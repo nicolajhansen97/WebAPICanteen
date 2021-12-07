@@ -49,9 +49,9 @@ namespace WebAPI.Controllers
 
             // Custom GUARD - Created by Niels & Nicolaj
             Microsoft.Extensions.Primitives.StringValues value = "";
-            Request.Headers.TryGetValue("ccp", out value);
+            Request.Headers.TryGetValue("ussr", out value);
 
-            if (value.Equals("admin"))
+            if (value.Equals("user"))
             {
                 if (id != tblLunchBooking.FldLunchBookingId)
                 {
@@ -92,9 +92,9 @@ namespace WebAPI.Controllers
 
             // Custom GUARD - Created by Niels & Nicolaj
             Microsoft.Extensions.Primitives.StringValues value = "";
-            Request.Headers.TryGetValue("ccp", out value);
+            Request.Headers.TryGetValue("ussr", out value);
 
-            if (value.Equals("admin"))
+            if (value.Equals("user"))
             {
                 _context.TblLunchBookings.Add(tblLunchBooking);
                 await _context.SaveChangesAsync();
@@ -114,9 +114,9 @@ namespace WebAPI.Controllers
         {
             // Custom GUARD - Created by Niels & Nicolaj
             Microsoft.Extensions.Primitives.StringValues value = "";
-            Request.Headers.TryGetValue("ccp", out value);
+            Request.Headers.TryGetValue("ussr", out value);
 
-            if (value.Equals("admin"))
+            if (value.Equals("user"))
             {
                 var tblLunchBooking = await _context.TblLunchBookings.FindAsync(id);
                 if (tblLunchBooking == null)
