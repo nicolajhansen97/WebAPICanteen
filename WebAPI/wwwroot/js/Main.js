@@ -226,7 +226,7 @@ async function updateTotal() {
 }
 
 //@author: Rasmus
-function purchaseClicked() {
+async function purchaseClicked() {
     var cartItems = document.getElementById('shopCartItems')
     if (!cartItems.hasChildNodes()) {
         alert('No items in cart')
@@ -242,6 +242,15 @@ function purchaseClicked() {
         for (var j = 0; j < array[1][i]; j++) {
             console.log(array[0][i])
             //post command to API WIP:NEED TO ADD JSONDATA
+            var orderlineTemp = await getTable('TblOrderLines')
+            alert(orderlineTemp)
+            /*var orderLine = {
+                fldOrderLineId: "",
+                fldOrderId: "",
+                fldItemInfoId: "",
+                fldPrice: "",
+                tblItemInfo: ""
+            }*/
             //postCartOrder("TblOrderLines", array[0][i])
         }
     }
@@ -252,8 +261,7 @@ function purchaseClicked() {
     }
     updateTotal()
     //clear sessionStorage
-    sessionStorage.clear()
-    //Logout()
+    Logout()
 }
 
 
