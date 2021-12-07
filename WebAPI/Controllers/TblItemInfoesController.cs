@@ -24,7 +24,21 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblItemInfo>>> GetTblItemInfos()
         {
-            return await _context.TblItemInfos.ToListAsync();
+            // Custom GUARD
+           Microsoft.Extensions.Primitives.StringValues value = "";
+           Request.Headers.TryGetValue("ussr", out value);
+
+           if (value.Equals("user"))
+           { 
+                return await _context.TblItemInfos.ToListAsync();
+           }
+           else
+           {
+                return null;
+           }
+
+
+
         }
 
         // GET: api/TblItemInfoes/5
@@ -77,10 +91,24 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<TblItemInfo>> PostTblItemInfo(TblItemInfo tblItemInfo)
         {
-            _context.TblItemInfos.Add(tblItemInfo);
-            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTblItemInfo", new { id = tblItemInfo.FldItemInfoId }, tblItemInfo);
+
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("ccp", out value);
+
+            if (value.Equals("admin"))
+            {
+                _context.TblItemInfos.Add(tblItemInfo);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction("GetTblItemInfo", new { id = tblItemInfo.FldItemInfoId }, tblItemInfo);
+            }
+            else
+            {
+                return CreatedAtAction("Access denied!", null);
+            }
+            
         }
 
         // DELETE: api/TblItemInfoes/5
