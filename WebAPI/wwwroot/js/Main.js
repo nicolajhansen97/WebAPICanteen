@@ -283,7 +283,8 @@ async function postCartOrder(tableName, JsonData) {
     var response = await fetch(host, {
         method: "POST",
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'ussr':'user'
         },
         body: JSON.stringify(JsonData)
     })
