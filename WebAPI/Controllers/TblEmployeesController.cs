@@ -13,6 +13,7 @@ namespace WebAPI.Controllers
     [ApiController]
     public class TblEmployeesController : ControllerBase
     {
+
         private readonly canteenSystemContext _context;
 
         public TblEmployeesController(canteenSystemContext context)
@@ -24,21 +25,47 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblEmployee>>> GetTblEmployees()
         {
-            return await _context.TblEmployees.ToListAsync();
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("ussr", out value);
+
+            if (value.Equals("user"))
+            {
+                return await _context.TblEmployees.ToListAsync();
+            }
+            else
+            {
+                return null;
+            }
+
+            
         }
 
         // GET: api/TblEmployees/5
         [HttpGet("{id}")]
         public async Task<ActionResult<TblEmployee>> GetTblEmployee(int id)
         {
-            var tblEmployee = await _context.TblEmployees.FindAsync(id);
 
-            if (tblEmployee == null)
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("ccp", out value);
+
+            if (value.Equals("admin"))
             {
-                return NotFound();
-            }
+                var tblEmployee = await _context.TblEmployees.FindAsync(id);
 
-            return tblEmployee;
+                if (tblEmployee == null)
+                {
+                    return NotFound();
+                }
+
+                return tblEmployee;
+            }
+            else
+            {
+                return null;
+            }
+            
         }
 
         // PUT: api/TblEmployees/5
@@ -46,28 +73,41 @@ namespace WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTblEmployee(int id, TblEmployee tblEmployee)
         {
-            if (id != tblEmployee.FldEmployeeId)
-            {
-                return BadRequest();
-            }
 
-            _context.Entry(tblEmployee).State = EntityState.Modified;
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("ccp", out value);
 
-            try
+            if (value.Equals("admin"))
             {
-                await _context.SaveChangesAsync();
+                if (id != tblEmployee.FldEmployeeId)
+                {
+                    return BadRequest();
+                }
+
+                _context.Entry(tblEmployee).State = EntityState.Modified;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TblEmployeeExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!TblEmployeeExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return null;
             }
+           
 
             return NoContent();
         }
@@ -77,24 +117,50 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<TblEmployee>> PostTblEmployee(TblEmployee tblEmployee)
         {
-            _context.TblEmployees.Add(tblEmployee);
-            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTblEmployee", new { id = tblEmployee.FldEmployeeId }, tblEmployee);
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("ccp", out value);
+
+            if (value.Equals("admin"))
+            {
+                _context.TblEmployees.Add(tblEmployee);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction("GetTblEmployee", new { id = tblEmployee.FldEmployeeId }, tblEmployee);
+            }
+            else
+            {
+                return CreatedAtAction("Access denied!", null);
+            }
+            
         }
 
         // DELETE: api/TblEmployees/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTblEmployee(int id)
         {
-            var tblEmployee = await _context.TblEmployees.FindAsync(id);
-            if (tblEmployee == null)
-            {
-                return NotFound();
-            }
 
-            _context.TblEmployees.Remove(tblEmployee);
-            await _context.SaveChangesAsync();
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("ccp", out value);
+
+            if (value.Equals("admin"))
+            {
+                var tblEmployee = await _context.TblEmployees.FindAsync(id);
+                if (tblEmployee == null)
+                {
+                    return NotFound();
+                }
+
+                _context.TblEmployees.Remove(tblEmployee);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                return null;
+            }
+          
 
             return NoContent();
         }

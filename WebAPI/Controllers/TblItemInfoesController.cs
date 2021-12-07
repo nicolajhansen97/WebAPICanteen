@@ -60,28 +60,42 @@ namespace WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTblItemInfo(int id, TblItemInfo tblItemInfo)
         {
-            if (id != tblItemInfo.FldItemInfoId)
+
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("ccp", out value);
+
+            if (value.Equals("admin"))
             {
-                return BadRequest();
+                if (id != tblItemInfo.FldItemInfoId)
+                {
+                    return BadRequest();
+                }
+
+                _context.Entry(tblItemInfo).State = EntityState.Modified;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TblItemInfoExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            else
+            {
+                return null;
             }
 
-            _context.Entry(tblItemInfo).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TblItemInfoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            
 
             return NoContent();
         }
@@ -115,16 +129,32 @@ namespace WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTblItemInfo(int id)
         {
-            var tblItemInfo = await _context.TblItemInfos.FindAsync(id);
-            if (tblItemInfo == null)
+
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("ccp", out value);
+
+            if (value.Equals("admin"))
             {
-                return NotFound();
+                var tblItemInfo = await _context.TblItemInfos.FindAsync(id);
+                if (tblItemInfo == null)
+                {
+                    return NotFound();
+                }
+
+                _context.TblItemInfos.Remove(tblItemInfo);
+                await _context.SaveChangesAsync();
+
+            }
+            else
+            {
+                return null;
             }
 
-            _context.TblItemInfos.Remove(tblItemInfo);
-            await _context.SaveChangesAsync();
 
             return NoContent();
+
+
         }
 
         private bool TblItemInfoExists(int id)

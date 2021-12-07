@@ -46,28 +46,41 @@ namespace WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTblLunch(DateTime id, TblLunch tblLunch)
         {
-            if (id != tblLunch.FldDate)
-            {
-                return BadRequest();
-            }
 
-            _context.Entry(tblLunch).State = EntityState.Modified;
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("ccp", out value);
 
-            try
+            if (value.Equals("admin"))
             {
-                await _context.SaveChangesAsync();
+                if (id != tblLunch.FldDate)
+                {
+                    return BadRequest();
+                }
+
+                _context.Entry(tblLunch).State = EntityState.Modified;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TblLunchExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!TblLunchExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return null;
             }
+            
 
             return NoContent();
         }
@@ -77,38 +90,62 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<TblLunch>> PostTblLunch(TblLunch tblLunch)
         {
-            _context.TblLunches.Add(tblLunch);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (TblLunchExists(tblLunch.FldDate))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("ccp", out value);
 
-            return CreatedAtAction("GetTblLunch", new { id = tblLunch.FldDate }, tblLunch);
+            if (value.Equals("admin"))
+            {
+                _context.TblLunches.Add(tblLunch);
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException)
+                {
+                    if (TblLunchExists(tblLunch.FldDate))
+                    {
+                        return Conflict();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return CreatedAtAction("GetTblLunch", new { id = tblLunch.FldDate }, tblLunch);
+            }
+            else
+            {
+                return CreatedAtAction("Access denied!", null);
+            }
+          
         }
 
         // DELETE: api/TblLunches/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTblLunch(DateTime id)
         {
-            var tblLunch = await _context.TblLunches.FindAsync(id);
-            if (tblLunch == null)
-            {
-                return NotFound();
-            }
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("ccp", out value);
 
-            _context.TblLunches.Remove(tblLunch);
-            await _context.SaveChangesAsync();
+            if (value.Equals("admin"))
+            {
+                var tblLunch = await _context.TblLunches.FindAsync(id);
+                if (tblLunch == null)
+                {
+                    return NotFound();
+                }
+
+                _context.TblLunches.Remove(tblLunch);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                return null;
+            }
+            
 
             return NoContent();
         }

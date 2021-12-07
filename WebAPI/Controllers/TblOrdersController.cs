@@ -46,28 +46,41 @@ namespace WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTblOrder(int id, TblOrder tblOrder)
         {
-            if (id != tblOrder.FldOrderId)
-            {
-                return BadRequest();
-            }
 
-            _context.Entry(tblOrder).State = EntityState.Modified;
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("ccp", out value);
 
-            try
+            if (value.Equals("admin"))
             {
-                await _context.SaveChangesAsync();
+                if (id != tblOrder.FldOrderId)
+                {
+                    return BadRequest();
+                }
+
+                _context.Entry(tblOrder).State = EntityState.Modified;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TblOrderExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!TblOrderExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return null;
             }
+            
 
             return NoContent();
         }
@@ -77,24 +90,48 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<TblOrder>> PostTblOrder(TblOrder tblOrder)
         {
-            _context.TblOrders.Add(tblOrder);
-            await _context.SaveChangesAsync();
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("ccp", out value);
 
-            return CreatedAtAction("GetTblOrder", new { id = tblOrder.FldOrderId }, tblOrder);
+            if (value.Equals("admin"))
+            {
+                _context.TblOrders.Add(tblOrder);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction("GetTblOrder", new { id = tblOrder.FldOrderId }, tblOrder);
+            }
+            else
+            {
+                return CreatedAtAction("Access denied", null);
+            }
+            
         }
 
         // DELETE: api/TblOrders/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTblOrder(int id)
         {
-            var tblOrder = await _context.TblOrders.FindAsync(id);
-            if (tblOrder == null)
-            {
-                return NotFound();
-            }
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("ccp", out value);
 
-            _context.TblOrders.Remove(tblOrder);
-            await _context.SaveChangesAsync();
+            if (value.Equals("admin"))
+            {
+                var tblOrder = await _context.TblOrders.FindAsync(id);
+                if (tblOrder == null)
+                {
+                    return NotFound();
+                }
+
+                _context.TblOrders.Remove(tblOrder);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                return null;
+            }
+           
 
             return NoContent();
         }

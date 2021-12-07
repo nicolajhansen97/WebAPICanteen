@@ -46,28 +46,40 @@ namespace WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTblOrderLine(int id, TblOrderLine tblOrderLine)
         {
-            if (id != tblOrderLine.FldOrderLineId)
-            {
-                return BadRequest();
-            }
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("ccp", out value);
 
-            _context.Entry(tblOrderLine).State = EntityState.Modified;
+            if (value.Equals("admin"))
+            {
+                if (id != tblOrderLine.FldOrderLineId)
+                {
+                    return BadRequest();
+                }
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TblOrderLineExists(id))
+                _context.Entry(tblOrderLine).State = EntityState.Modified;
+
+                try
                 {
-                    return NotFound();
+                    await _context.SaveChangesAsync();
                 }
-                else
+                catch (DbUpdateConcurrencyException)
                 {
-                    throw;
+                    if (!TblOrderLineExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
             }
+            else
+            {
+                return null;
+            }
+           
 
             return NoContent();
         }
@@ -77,24 +89,48 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<TblOrderLine>> PostTblOrderLine(TblOrderLine tblOrderLine)
         {
-            _context.TblOrderLines.Add(tblOrderLine);
-            await _context.SaveChangesAsync();
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("ccp", out value);
 
-            return CreatedAtAction("GetTblOrderLine", new { id = tblOrderLine.FldOrderLineId }, tblOrderLine);
+            if (value.Equals("admin"))
+            {
+                _context.TblOrderLines.Add(tblOrderLine);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction("GetTblOrderLine", new { id = tblOrderLine.FldOrderLineId }, tblOrderLine);
+            }
+            else
+            {
+                return CreatedAtAction("Access denied", null);
+            }
+            
         }
 
         // DELETE: api/TblOrderLines/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTblOrderLine(int id)
         {
-            var tblOrderLine = await _context.TblOrderLines.FindAsync(id);
-            if (tblOrderLine == null)
-            {
-                return NotFound();
-            }
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("ccp", out value);
 
-            _context.TblOrderLines.Remove(tblOrderLine);
-            await _context.SaveChangesAsync();
+            if (value.Equals("admin"))
+            {
+                var tblOrderLine = await _context.TblOrderLines.FindAsync(id);
+                if (tblOrderLine == null)
+                {
+                    return NotFound();
+                }
+
+                _context.TblOrderLines.Remove(tblOrderLine);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                return null;
+            }
+           
 
             return NoContent();
         }

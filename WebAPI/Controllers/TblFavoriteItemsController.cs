@@ -46,27 +46,39 @@ namespace WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTblFavoriteItem(int id, TblFavoriteItem tblFavoriteItem)
         {
-            if (id != tblFavoriteItem.FldFavoriteItemNumber)
-            {
-                return BadRequest();
-            }
 
-            _context.Entry(tblFavoriteItem).State = EntityState.Modified;
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("ccp", out value);
 
-            try
+            if (value.Equals("admin"))
             {
-                await _context.SaveChangesAsync();
+                if (id != tblFavoriteItem.FldFavoriteItemNumber)
+                {
+                    return BadRequest();
+                }
+
+                _context.Entry(tblFavoriteItem).State = EntityState.Modified;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TblFavoriteItemExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!TblFavoriteItemExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return null;
             }
 
             return NoContent();
@@ -77,24 +89,49 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<TblFavoriteItem>> PostTblFavoriteItem(TblFavoriteItem tblFavoriteItem)
         {
-            _context.TblFavoriteItems.Add(tblFavoriteItem);
-            await _context.SaveChangesAsync();
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("ccp", out value);
 
-            return CreatedAtAction("GetTblFavoriteItem", new { id = tblFavoriteItem.FldFavoriteItemNumber }, tblFavoriteItem);
+            if (value.Equals("admin"))
+            {
+                _context.TblFavoriteItems.Add(tblFavoriteItem);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction("GetTblFavoriteItem", new { id = tblFavoriteItem.FldFavoriteItemNumber }, tblFavoriteItem);
+            }
+            else
+            {
+                return CreatedAtAction("Access denied", null);
+            }
+           
         }
 
         // DELETE: api/TblFavoriteItems/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTblFavoriteItem(int id)
         {
-            var tblFavoriteItem = await _context.TblFavoriteItems.FindAsync(id);
-            if (tblFavoriteItem == null)
-            {
-                return NotFound();
-            }
 
-            _context.TblFavoriteItems.Remove(tblFavoriteItem);
-            await _context.SaveChangesAsync();
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("ccp", out value);
+
+            if (value.Equals("admin"))
+            {
+                var tblFavoriteItem = await _context.TblFavoriteItems.FindAsync(id);
+                if (tblFavoriteItem == null)
+                {
+                    return NotFound();
+                }
+
+                _context.TblFavoriteItems.Remove(tblFavoriteItem);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                return null;
+            }
+            
 
             return NoContent();
         }

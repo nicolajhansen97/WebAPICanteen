@@ -46,27 +46,39 @@ namespace WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTblLunchBooking(int id, TblLunchBooking tblLunchBooking)
         {
-            if (id != tblLunchBooking.FldLunchBookingId)
-            {
-                return BadRequest();
-            }
 
-            _context.Entry(tblLunchBooking).State = EntityState.Modified;
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("ccp", out value);
 
-            try
+            if (value.Equals("admin"))
             {
-                await _context.SaveChangesAsync();
+                if (id != tblLunchBooking.FldLunchBookingId)
+                {
+                    return BadRequest();
+                }
+
+                _context.Entry(tblLunchBooking).State = EntityState.Modified;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TblLunchBookingExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!TblLunchBookingExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return null;
             }
 
             return NoContent();
@@ -77,24 +89,49 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<TblLunchBooking>> PostTblLunchBooking(TblLunchBooking tblLunchBooking)
         {
-            _context.TblLunchBookings.Add(tblLunchBooking);
-            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTblLunchBooking", new { id = tblLunchBooking.FldLunchBookingId }, tblLunchBooking);
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("ccp", out value);
+
+            if (value.Equals("admin"))
+            {
+                _context.TblLunchBookings.Add(tblLunchBooking);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction("GetTblLunchBooking", new { id = tblLunchBooking.FldLunchBookingId }, tblLunchBooking);
+            }
+            else
+            {
+                return CreatedAtAction("Access denied!", null);
+            }
+           
         }
 
         // DELETE: api/TblLunchBookings/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTblLunchBooking(int id)
         {
-            var tblLunchBooking = await _context.TblLunchBookings.FindAsync(id);
-            if (tblLunchBooking == null)
-            {
-                return NotFound();
-            }
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("ccp", out value);
 
-            _context.TblLunchBookings.Remove(tblLunchBooking);
-            await _context.SaveChangesAsync();
+            if (value.Equals("admin"))
+            {
+                var tblLunchBooking = await _context.TblLunchBookings.FindAsync(id);
+                if (tblLunchBooking == null)
+                {
+                    return NotFound();
+                }
+
+                _context.TblLunchBookings.Remove(tblLunchBooking);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                return null;
+            }
+           
 
             return NoContent();
         }

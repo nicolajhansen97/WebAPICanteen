@@ -46,28 +46,42 @@ namespace WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTblCategory(int id, TblCategory tblCategory)
         {
-            if (id != tblCategory.FldCategoryTypeId)
+
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("db", out value);
+
+            if (value.Equals("owner"))
             {
-                return BadRequest();
+                if (id != tblCategory.FldCategoryTypeId)
+                {
+                    return BadRequest();
+                }
+
+                _context.Entry(tblCategory).State = EntityState.Modified;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TblCategoryExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            else
+            {
+                return null;
             }
 
-            _context.Entry(tblCategory).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TblCategoryExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+           
 
             return NoContent();
         }
@@ -77,38 +91,64 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<TblCategory>> PostTblCategory(TblCategory tblCategory)
         {
-            _context.TblCategories.Add(tblCategory);
-            try
+
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("ccp", out value);
+
+            if (value.Equals("admin"))
             {
-                await _context.SaveChangesAsync();
+                _context.TblCategories.Add(tblCategory);
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException)
+                {
+                    if (TblCategoryExists(tblCategory.FldCategoryTypeId))
+                    {
+                        return Conflict();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return CreatedAtAction("GetTblCategory", new { id = tblCategory.FldCategoryTypeId }, tblCategory);
             }
-            catch (DbUpdateException)
+            else
             {
-                if (TblCategoryExists(tblCategory.FldCategoryTypeId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                return CreatedAtAction("Access denied!", null);
             }
 
-            return CreatedAtAction("GetTblCategory", new { id = tblCategory.FldCategoryTypeId }, tblCategory);
+           
         }
 
         // DELETE: api/TblCategories/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTblCategory(int id)
         {
-            var tblCategory = await _context.TblCategories.FindAsync(id);
-            if (tblCategory == null)
-            {
-                return NotFound();
-            }
 
-            _context.TblCategories.Remove(tblCategory);
-            await _context.SaveChangesAsync();
+            // Custom GUARD - Created by Niels & Nicolaj
+            Microsoft.Extensions.Primitives.StringValues value = "";
+            Request.Headers.TryGetValue("ccp", out value);
+
+            if (value.Equals("admin"))
+            {
+                var tblCategory = await _context.TblCategories.FindAsync(id);
+                if (tblCategory == null)
+                {
+                    return NotFound();
+                }
+
+                _context.TblCategories.Remove(tblCategory);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                return null;
+            }
 
             return NoContent();
         }
