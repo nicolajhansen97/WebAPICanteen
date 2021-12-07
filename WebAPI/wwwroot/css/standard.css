@@ -1,3 +1,6 @@
+/* Typography
+======================*/
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -8,65 +11,55 @@ body {
     background: linear-gradient(100deg, grey, lightgray);
 }
 
-#Employee-password {
-    /* When we have the card reader
-    filter: opacity(0);
-    width: 0;
-    overflow: hidden;
-    */
-}
-
-#Employee {
-
-}
-
-header {
-    margin-top: 30px;
-    height: 20vh;
-}
-
 #app{
     position: relative;
+    height: 100vh;
+}
+
+.B-Header {
+    font-weight: normal;
+    color: #012E56;
+    text-align: center;
+    font-size: 2.5em;
+}
+
+.Page-Title {
+    margin-top: 3%;
+}
+
+/* Header
+======================*/
+
+
+header {
+    height: 13vh;
+    border-bottom: 1px solid black;
 }
 
 .Items {
-    width: 100%;
-    height: 100%;
     display: flex;
-    justify-content: space-between;
+    height: 100%;
 }
 
-.Login-Items {
-    justify-content: center;
-    width: 300px; 
-    height: 100%;
-    display: flex;
-    margin: 0 auto;
+.Item {
+    width: 60%;
+    align-self: center;
+    text-align: center;
 }
 
 .Item:first-of-type {
-    margin-left: 10px;
+    width: 20%;
+    text-align: left;
+    padding-left: 50px;
 }
 
 .Item:last-of-type {
-    margin-right: 200px;
+    width: 20%;
 }
 
-.cart-icon {
-    position: fixed;
-    right: 16px;
-    top: 50px;
-}
-
-.Employee-id {
-    border: 1px solid black;
-}
-
-
-.shoppingCart {
-    border: 1px solid black;
-    padding-left: 25%;
-    width: 25%; 
+.Item h3 {
+    font-size: 1.6em;
+    margin-right: 4.8em;
 }
 
 .cancelOrder {
@@ -76,28 +69,225 @@ header {
     height: auto;
 }
 
-.logo {
-    border: 1px solid black;
-    padding-left: 8%;
-    width: 25%;
-    height: 100%;
-}
-
 .logo-img{
     width: 300px;
     height: auto;
 }
 
-.fillOut {
-    padding-left: 25%;
-    width: 33%;
-    height: auto;
+/* Header Login */
+
+section {
+    margin-top: 10%;
+}
+
+.center {
+    background: white;
+    width: 350px;
+    height: 200px;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 0 auto;
+}
+
+.welcome {
+    font-size: 20px;
+    font-family: Impact;
+    text-align: center;
+    text-transform: capitalize;
+    border-bottom: 1px solid silver;
+    padding: 10px 0 20px 0;
+}
+
+.description {
+    font-size: 15px;
+}
+
+.cardNumber {
+    padding-top: 55px;
+    animation: left-to-right 6s ease-in-out infinite alternate;
+}
+
+.testText {
+    text-align: center;
+    padding-top: 40px;
+}
+
+@keyframes left-to-right {
+    0% {
+        transform: translateX(0%);
+        color: blue;
+    }
+    100% {
+        transform: translateX(70%);
+        color: pink;
+    }
+}
+
+.Login-Items {
+    display: flex;
+    height: 100%;
+}
+
+.Login-Items div {
+    width: 100%;
+    text-align: center;
+    align-self: center;
+}
+
+/* Main-Frontpage
+======================*/
+
+.frontpage-section {
+    margin-top: 13%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.breakfast {
+    top: 200%;
+    left: 10%;
+    background: darkslateblue;
+    width: 350px;
+    height: 200px;
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.lunch {
+    top: 200%;
+    left: 40%;
+    background: darkslateblue;
+    width: 350px;
+    height: 200px;
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.others {
+    top: 200%;
+    left: 70%;
+    background: darkslateblue;
+    width: 350px;
+    height: 200px;
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.menuText {
+    text-align: center;
+    padding-top: 55px;
+    font-size: 70px;
+}
+
+/* lunch-Frontpage
+======================*/
+
+.dayBox
+{
+    background: darkslateblue;
+    width: 14%;
+    height: 30%;
+    border-radius: 20px;
+    float: left;
+    margin-left: 5%;
+}
+
+.checkBox {
+    padding-top: 180%;
+    padding-left: 35%;
+    margin-bottom: 5%
+}
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* ?-Frontpage
+======================*/
+
+
+.Employee-id {
+    border: 1px solid black;
 }
 
 
-h1 {
-    text-align: center;
-    color: #012E56;
+.shoppingCart {
+    border: 1px solid black;
+    padding-left: 25%;
+    width: 25%;
+}
+
+.cart-icon {
+    position: fixed;
+    right: 16px;
+    top: 50px;
+}
+
+#Employee-password {
+    /* When we have the card reader
+    filter: opacity(0);
+    width: 0;
+    overflow: hidden;
+    */
 }
 
 .itemDesign {
@@ -139,12 +329,6 @@ h1 {
 
 .btn-basket {
     text-align: center;
-}
-.B-Header {
-    font-weight: normal;
-    color: #012E56;
-    text-align: center;
-    font-size: 2.5em;
 }
 
 .cart-item-design {

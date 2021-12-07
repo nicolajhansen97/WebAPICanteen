@@ -5,33 +5,38 @@
     <title>Login</title>
     <link rel="icon" type="image/x-icon" href="/IMG/favicon.ico">
     <link rel="stylesheet" href="CSS/standard.css">
-    <link rel="stylesheet" href="CSS/frontsitesstyles.css">
 </head>
 <body>
+<main id="app">
     <header>
         <div class="Login-Items">
             <div><img class="logo-img" src="IMG/logo.png" alt=""></div>
         </div>
     </header>
-    <div class="center">
-        <div class="welcome">
-            <a>Welcome to our canteen</a>
-        </div>
 
-        <div class="cardNumber">
-            <label>Scan your card</label>
-        </div>
+    <section>
+        <div class="center">
+            <div class="welcome">
+                <a>Welcome to our canteen</a>
+            </div>
 
-        <div class="testText">
-            <input id="Employee-password" type="password" /><br />
+            <div class="cardNumber">
+                <label>Scan your card</label>
+            </div>
+
+            <div class="testText">
+                <input id="Employee-password" type="password"/><br/>
+            </div>
         </div>
-    </div>
-    <script src="js/jquery-3.6.0.min.js"></script>
-    <script src="js/Main.js"></script>
-    <script>
+    </section>
+</main>
+
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/Main.js"></script>
+<script> 
         window.onload = async function () {
             await LoginScreenLoadElements()
         }
-    </script>
+</script>
 </body>
 </html>
