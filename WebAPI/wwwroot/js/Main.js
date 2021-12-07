@@ -240,31 +240,41 @@ async function purchaseClicked() {
     //loop post them
     for (var i = 0; i < array[0].length; i++) {
         for (var j = 0; j < array[1][i]; j++) {
-            console.log(array[0][i])
+            //console.log(array[0][i])
             //post command to API WIP:NEED TO ADD JSONDATA
-            var orderlineTemp = await getTable('TblOrderLines')
-            alert(orderlineTemp)
-            /*var orderLine = {
-                fldOrderLineId: "",
-                fldOrderId: "",
-                fldItemInfoId: "",
-                fldPrice: "",
-                tblItemInfo: ""
-            }*/
-            //postCartOrder("TblOrderLines", array[0][i])
+
+            //make order with timestamp
+            var d = new Date()
+            //console.log(d.toLocaleDateString() + "T" + d.toLocaleTimeString())
+
+            var makeorder = {
+                fldEmployeeId: em.fldEmployeeId,
+                fldTimeStamp: d.toLocaleDateString() + " " + d.toLocaleTimeString()
+            }
+
+            await postCartOrder('TblOrders', makeorder)
+
+            //make orderline
+            var order = await getTable('TblOrders')
+            var makeOrderLine = {
+                fldOrderId: order[order.length - 1].fldOrderId,
+                fldItemInfoId: array[0][i].fldItemInfoId,
+                fldPrice: array[0][i].fldPrice
+            }
+            await postCartOrder('TblOrderLines', makeOrderLine)
         }
     }
-
     //delete items in cart
     while (cartItems.hasChildNodes()) {
         cartItems.removeChild(cartItems.firstChild)
     }
     updateTotal()
-    //clear sessionStorage
+    //logout
     Logout()
 }
 
-
+//@author: Rasmus
+//Our posting function
 async function postCartOrder(tableName, JsonData) {
     var host = APIurl
     host = host + tableName;
