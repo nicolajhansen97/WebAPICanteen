@@ -21,7 +21,16 @@
             <h1 class="B-Header">Shopping Cart Items</h1>
             <div id="shopCartItems"></div>
             <h2 class="cart-TOTAL">Total: 0 kr</h2>
-            <button id="cart-purchase">Order Items</button>
+        </div>
+        <div class="swipe-button">
+            <div id="button-background">
+                <span class="slide-text">Purchase</span>
+                <div id="slider">
+                    <i id="locker" class="material-icons"></i>
+                </div>
+            </div>
+            <!--Not our swipe code it is from codepen-->
+            <!--<div class="bottom">Coded by <a href="https://github.com/gpressutto5">Guilherme Pressutto</a>. Designed by <a href="https://dribbble.com/diegomartins">Diego Martins</a>.</div>-->
         </div>
 
     </main>
@@ -31,8 +40,8 @@
         window.onload = function () {
             idleLogout();
             loadEmployeeName()
-            loadPurchaseBTN()
-            var shop = JSON.parse(sessionStorage.getItem("items")) 
+            getSwipeButton()
+            var shop = JSON.parse(sessionStorage.getItem("items"))
             makeShoppingCart(shop)
         }
     </script>

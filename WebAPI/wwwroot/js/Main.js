@@ -12,12 +12,6 @@ class ItemType {
 }
 
 //@author: Rasmus
-function loadPurchaseBTN() {
-    document.getElementById('cart-purchase').addEventListener('click',
-        purchaseClicked)
-}
-
-//@author: Rasmus
 function loadEmployeeName() {
     var em = getEmployee()
     document.getElementById('Employee').innerText = em.fldName
@@ -236,6 +230,17 @@ async function purchaseClicked() {
     var em = getEmployee()
     alert('Thank you for your purchase ' + em.fldName)
 
+    //order
+    var d = new Date()
+    //console.log(d.toLocaleDateString() + "T" + d.toLocaleTimeString())
+
+    var makeorder = {
+        fldEmployeeId: em.fldEmployeeId,
+        fldTimeStamp: d.toLocaleDateString() + " " + d.toLocaleTimeString()
+    }
+
+    await postCartOrder('TblOrders', makeorder)
+
     //get array of orders
     var array = JSON.parse(sessionStorage.getItem("items"))
     //loop post them
@@ -244,19 +249,9 @@ async function purchaseClicked() {
             //console.log(array[0][i])
             //post command to API WIP:NEED TO ADD JSONDATA
 
-            //make order with timestamp
-            var d = new Date()
-            //console.log(d.toLocaleDateString() + "T" + d.toLocaleTimeString())
-
-            var makeorder = {
-                fldEmployeeId: em.fldEmployeeId,
-                fldTimeStamp: d.toLocaleDateString() + " " + d.toLocaleTimeString()
-            }
-
-            await postCartOrder('TblOrders', makeorder)
-
             //make orderline
             var order = await getTable('TblOrders')
+
             var makeOrderLine = {
                 fldOrderId: order[order.length - 1].fldOrderId,
                 fldItemInfoId: array[0][i].fldItemInfoId,
@@ -327,4 +322,68 @@ async function login(event) {
             alert("Invalid Card")
         }
     }
+}
+
+
+//@Author: Guilherme Pressutto GithubLink:https://github.com/gpressutto5
+function getSwipeButton() {
+    var initialMouse = 0;
+    var slideMovementTotal = 0;
+    var mouseIsDown = false;
+    var slider = $('#slider');
+
+    slider.on('mousedown touchstart', function (event) {
+        mouseIsDown = true;
+        slideMovementTotal = $('#button-background').width() - $(this).width() + 10;
+        initialMouse = event.clientX || event.originalEvent.touches[0].pageX;
+    });
+
+    $(document.body, '#slider').on('mouseup touchend', function (event) {
+        if (!mouseIsDown)
+            return;
+        mouseIsDown = false;
+        var currentMouse = event.clientX || event.changedTouches[0].pageX;
+        var relativeMouse = currentMouse - initialMouse;
+
+        if (relativeMouse < slideMovementTotal) {
+            $('.slide-text').fadeTo(300, 1);
+            slider.animate({
+                left: "-10px"
+            }, 300);
+            return;
+        }
+        slider.addClass('unlocked');
+        $('#locker').text('Purchased');
+        purchaseClicked()
+        setTimeout(function () {
+            slider.on('click tap', function (event) {
+                if (!slider.hasClass('unlocked'))
+                    return;
+                slider.removeClass('unlocked');
+                $('#locker').text('');
+                slider.off('click tap');
+            });
+        }, 0);
+    });
+
+    $(document.body).on('mousemove touchmove', function (event) {
+        if (!mouseIsDown)
+            return;
+
+        var currentMouse = event.clientX || event.originalEvent.touches[0].pageX;
+        var relativeMouse = currentMouse - initialMouse;
+        var slidePercent = 1 - (relativeMouse / slideMovementTotal);
+
+        $('.slide-text').fadeTo(0, slidePercent);
+
+        if (relativeMouse <= 0) {
+            slider.css({ 'left': '-10px' });
+            return;
+        }
+        if (relativeMouse >= slideMovementTotal + 10) {
+            slider.css({ 'left': slideMovementTotal + 'px' });
+            return;
+        }
+        slider.css({ 'left': relativeMouse - 10 });
+    });
 }
