@@ -62,7 +62,8 @@ async function getTable(tableName) {
     const data =  await $.ajax({
         type: "GET",
         dataType: "json",
-        url: host
+        url: host,
+        headers: { 'ussr': 'user' }
     }).then(function (data) {
         return data
     })
