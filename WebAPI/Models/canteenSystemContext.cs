@@ -168,6 +168,8 @@ namespace WebAPI.Models
                     .HasMaxLength(300)
                     .IsUnicode(false)
                     .HasColumnName("fldMenuDescription");
+
+                entity.Property(e => e.FldMenuFinalized).HasColumnName("fldMenuFinalized");
             });
 
             modelBuilder.Entity<TblLunchBooking>(entity =>
