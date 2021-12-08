@@ -236,12 +236,8 @@ async function purchaseClicked() {
 
     var makeorder = {
         fldEmployeeId: em.fldEmployeeId,
-        fldTimeStamp: d.toLocaleDateString() + " " + d.toLocaleTimeString()
+        fldTimeStamp: formatDate(d)
     }
-
-    alert(formatDate(d))
-
-    alert(d.toLocaleDateString() + " " + d.toLocaleTimeString())
 
     await postCartOrder('TblOrders', makeorder)
 
@@ -270,7 +266,7 @@ async function purchaseClicked() {
     }
     updateTotal()
     //logout
-    Logout()
+    //Logout()
 }
 
 //@author: Rasmus
