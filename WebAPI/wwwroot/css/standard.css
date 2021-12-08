@@ -24,7 +24,7 @@ body {
 }
 
 .Page-Title {
-    margin-top: 3%;
+    margin-top: 10%;
 }
 
 /* Header
@@ -32,7 +32,13 @@ body {
 
 
 header {
+    position: fixed;
+    overflow:hidden;
+    background: linear-gradient(100deg, grey,darkgrey);
+    z-index: 1;
+    top:0;
     height: 13vh;
+    width:100%;
     border-bottom: 1px solid black;
 }
 
@@ -42,19 +48,19 @@ header {
 }
 
 .Item {
-    width: 60%;
+    width: 10%;
     align-self: center;
     text-align: center;
 }
 
-.Item:first-of-type {
-    width: 20%;
-    text-align: left;
-    padding-left: 50px;
+.Item-Logo{
+    width:60%;
 }
 
-.Item:last-of-type {
-    width: 20%;
+.Item:first-of-type {
+    width:20%;
+    text-align: left;
+    padding-left: 50px;
 }
 
 .Item h3 {
@@ -276,10 +282,12 @@ input:checked + .slider:before {
     width: 25%;
 }
 
+
 .cart-icon {
-    position: fixed;
+    /*position: fixed;
+    z-index: 2;
+    top: 30px;*/
     right: 16px;
-    top: 50px;
 }
 
 #Employee-password {
