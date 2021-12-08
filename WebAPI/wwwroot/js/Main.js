@@ -239,6 +239,10 @@ async function purchaseClicked() {
         fldTimeStamp: d.toLocaleDateString() + " " + d.toLocaleTimeString()
     }
 
+    alert(formatDate(d))
+
+    alert(d.toLocaleDateString() + " " + d.toLocaleTimeString())
+
     await postCartOrder('TblOrders', makeorder)
 
     //get array of orders
@@ -386,4 +390,20 @@ function getSwipeButton() {
         }
         slider.css({ 'left': relativeMouse - 10 });
     });
+}
+
+
+//DATE TEST
+
+function dateComponentPad(value) {
+    var format = String(value);
+
+    return format.length < 2 ? '0' + format : format;
+}
+
+function formatDate(date) {
+    var datePart = [date.getFullYear(), date.getMonth() + 1, date.getDate()].map(dateComponentPad);
+    var timePart = [date.getHours(), date.getMinutes(), date.getSeconds()].map(dateComponentPad);
+
+    return datePart.join('-') + ' ' + timePart.join(':');
 }
