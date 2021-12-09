@@ -192,16 +192,17 @@ section {
 {
     background: darkslateblue;
     width: 14%;
-    height: 30%;
+    height: 600px;
     border-radius: 20px;
     float: left;
     margin-left: 5%;
 }
 
 .checkBox {
-    padding-top: 180%;
-    padding-left: 35%;
-    margin-bottom: 5%
+    padding-top: 32%;
+    padding-left: 5.5%;
+    margin-bottom: 5%;
+    position: fixed;
 }
 
 /* The switch - the box around the slider */
@@ -265,6 +266,42 @@ input:checked + .slider:before {
 
 .slider.round:before {
     border-radius: 50%;
+}
+
+.dateName
+{
+    padding-left: 270%;
+    padding-top: 70%;
+    color: green;
+}
+
+.theDate
+{
+    padding-left: 270%;
+    color:orange;
+}
+
+.menu {
+
+    padding-top: 100%;
+    padding-left: 270%;
+    color: pink;
+}
+
+.menuName {
+    padding-left: 270%;
+    color: gold;
+}
+
+.description {
+    padding-top: 150%;
+    padding-left: 270%;
+    color: pink;
+}
+
+.menuDescription {
+    padding-left: 270%;
+    color: gold;
 }
 
 /* ?-Frontpage

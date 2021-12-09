@@ -20,7 +20,7 @@
     </header>
 
     <section>
-        <div class="dayBox">
+        <div id="monday" class="dayBox">
             <div class="checkBox">
                 <label class="switch">
                     <input type="checkbox">
@@ -29,7 +29,7 @@
             </div>
         </div>
 
-        <div class="dayBox">
+        <div id="tuesday" class="dayBox">
             <div class="checkBox">
                 <label class="switch">
                     <input type="checkbox">
@@ -38,7 +38,7 @@
             </div>
         </div>
 
-        <div class="dayBox">
+        <div id="wednesday" class="dayBox">
             <div class="checkBox">
                 <label class="switch">
                     <input type="checkbox">
@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <div class="dayBox">
+        <div id="thursday" class="dayBox">
             <div class="checkBox">
                 <label class="switch">
                     <input type="checkbox">
@@ -56,7 +56,7 @@
             </div>
         </div>
 
-        <div class="dayBox">
+        <div id="friday" class="dayBox">
             <div class="checkBox">
                 <label class="switch">
                     <input type="checkbox">
@@ -72,6 +72,7 @@
     window.onload = function () {
         idleLogout()
         loadEmployeeName()
+        getLunchItems("TblLunches")
     }
 </script>
 </body>

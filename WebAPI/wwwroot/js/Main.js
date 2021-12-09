@@ -1,4 +1,4 @@
-const APIurl = 'https://localhost:5001/api/'
+const APIurl = 'https://localhost:44355/api/'
 
 
 //@author: Rasmus
@@ -403,3 +403,264 @@ function formatDate(date) {
 
     return datePart.join('-') + ' ' + timePart.join(':');
 }
+
+
+//Nicolaj TEST LUNCH - DONT FUCKING TOUCH
+
+async function getLunchItems(tableName) {
+
+    const dates = calculateWeekDays();
+    const data = await getTable(tableName)
+
+    document.getElementById("monday").innerHTML = 
+
+        `
+        ${data.map(function (lunch) {
+            if (!lunch.fldDate.includes(dates[0])) return
+        var lunchItem = JSON.stringify(lunch)
+        return `
+                  <div class = 'dayBox'>
+                ${addJsonLunch(lunch)}
+            </div>
+                <div class="checkBox">
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider round"></span>
+                </label>
+                </div>
+            `
+    }).join('')}
+    `
+
+    document.getElementById("tuesday").innerHTML =
+
+        `
+        ${data.map(function (lunch) {
+            if (!lunch.fldDate.includes(dates[1])) return
+            var lunchItem = JSON.stringify(lunch)
+            return `
+                  <div class = 'dayBox'>
+                ${addJsonLunch(lunch)}
+            </div>
+                <div class="checkBox">
+                <label class="switch">
+                    <input type="checkbox" id="tuesday" onclick="addRemoveLunch">
+                    <span class="slider round"></span>
+                </label>
+                </div>
+            `
+        }).join('')}
+    `
+    document.getElementById("wednesday").innerHTML =
+
+        `
+        ${data.map(function (lunch) {
+            if (!lunch.fldDate.includes(dates[2])) return
+            var lunchItem = JSON.stringify(lunch)
+            return `
+                <div class = 'dayBox'>
+                ${addJsonLunch(lunch)}
+            </div>
+                <div class="checkBox">
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider round"></span>
+                </label>
+                </div>
+            `
+        }).join('')}
+    `
+    document.getElementById("thursday").innerHTML =
+
+        `
+        ${data.map(function (lunch) {
+            if (!lunch.fldDate.includes(dates[3])) return
+            var lunchItem = JSON.stringify(lunch)
+            return `
+                  <div class = 'dayBox'>
+                ${addJsonLunch(lunch)}
+            </div>
+                <div class="checkBox">
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider round"></span>
+                </label>
+                </div>
+            `
+        }).join('')}
+    `
+    document.getElementById("friday").innerHTML =
+
+        `
+        ${data.map(function (lunch) {
+            if (!lunch.fldDate.includes(dates[4])) return
+            var lunchItem = JSON.stringify(lunch)
+            return `
+                <div class = 'dayBox'>
+                ${addJsonLunch(lunch)}
+            </div>
+                <div class="checkBox">
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider round"></span>
+                </label>
+                </div>
+            `
+        }).join('')}
+    `
+
+
+}
+
+
+function addJsonLunch(lunch) {
+
+
+    return `
+        <p class="dateName">Date:</p>
+        <p class="theDate">${lunch.fldDate.replace("T00:00:00", "")}</p>
+        <p class="menu">Menu:</p>
+        <p class="menuName">${lunch.fldMenu}</p>
+        <p class="description">Description:</p>
+        <p class="menuDescription">${lunch.fldMenuDescription}</p> `
+}
+
+function addRemoveFood() {
+
+}
+
+Date.prototype.addDays = function (days) {
+    var date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
+}
+
+/* 
+ * @author Nicolaj & Niels
+ * A method which check what kind of day the current day is.
+ */
+function getWhichKindOfDay() {
+
+    var whichDayIsIt = "";
+    var dateToday = new Date();
+
+    switch (dateToday.getDay()) {
+        case 0: whichDayIsIt = "Sunday"; return whichDayIsIt;
+        case 1: whichDayIsIt = "Monday"; return whichDayIsIt;
+        case 2: whichDayIsIt = "Tuesday"; return whichDayIsIt;
+        case 3: whichDayIsIt = "Wednesday"; return whichDayIsIt;
+        case 4: whichDayIsIt = "Thursday"; return whichDayIsIt;
+        case 5: whichDayIsIt = "Friday"; return whichDayIsIt;
+        case 6: whichDayIsIt = "Saturday"; return whichDayIsIt;
+        default: whichDayIsIt = "No day found!"; return whichDayIsIt;
+    }
+}
+
+function getTheDate() {
+
+    var todaysDate = new Date();
+    //var datetime = now.getFullYear() + '/' + (now.getMonth() + 1) + '/' + now.getDate();
+
+    return todaysDate;
+}
+
+function calculateMonday(weekDay) {
+
+    var mondayDate;
+
+    weekDay = getWhichKindOfDay();
+    var date = new Date();
+
+    //alert("Weekdate: " + weekDay + "//" + "Date: " + date);
+
+    if (weekDay === "Monday") {
+        mondayDate = date;
+        return mondayDate;
+    }
+    else if (weekDay === "Tuesday") {
+        mondayDate = (date.addDays(-1));
+        return mondayDate;
+    }
+    else if (weekDay === "Wednesday") {
+      
+        mondayDate = (date.addDays(-2));
+        return mondayDate;
+    }
+    else if (weekDay === "Thursday") {
+
+        mondayDate = (date.addDays(-3));
+        return mondayDate;
+    }
+    else if (weekDay === "Friday") {
+
+        mondayDate = (date.addDays(-4));
+        return mondayDate;
+    }
+    else if (weekDay === "Saturday") {
+
+        mondayDate = (date.addDays(-5));
+        return mondayDate;
+    }
+    else if (weekDay === "Sunday") {
+
+        mondayDate = (date.addDays(1));
+        return mondayDate;
+    }
+}
+
+
+    function calculateWeekDays()
+    {
+
+        var mondayDate = calculateMonday();
+
+        
+
+        const days = [];
+        days[0] = mondayDate;
+        days[1] = mondayDate.addDays(1);
+        days[2] = mondayDate.addDays(2);
+        days[3] = mondayDate.addDays(3);
+        days[4] = mondayDate.addDays(4);
+        days[5] = mondayDate.addDays(5);
+        days[6] = mondayDate.addDays(6);
+
+        
+  
+
+        for (var i = 0; i < days.length; i++) {
+
+          
+
+            //Set here because you cant get the fucking month value inside this shit.
+            var dateForDate = days[i].getDate();
+            var monthForDate = (days[i].getMonth() + 1);
+            var yearForDate = days[i].getFullYear();
+            
+
+          //  alert(dateForDate + " " + yearForDate + " " + monthForDate);
+
+            days[i] = yearForDate + '-' + monthForDate + '-' + dateForDate;
+
+            if (dateForDate <= 9) {
+
+                days[i] = yearForDate + '-' + monthForDate + '-' + '0' + dateForDate;
+
+                if (monthForDate <= 9) {
+                  
+                    days[i] = yearForDate + '-' + '0' + monthForDate + '-' + '0' + dateForDate;
+                }
+
+            }
+
+            if (monthForDate <= 9 && dateForDate >= 10) {
+
+                days[i] = yearForDate + '-' + '0' + monthForDate + '-' + dateForDate;
+            }
+            
+        }
+
+        return days;
+}
+   
+
