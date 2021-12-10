@@ -1,4 +1,4 @@
-const APIurl = 'https://localhost:44355/api/'
+const APIurl = 'https://localhost:5001/api/'
 
 
 //@author: Rasmus
@@ -54,7 +54,7 @@ function Logout() {
 async function getTable(tableName) {
     var host = APIurl
     host = host + tableName;
-    const data =  await $.ajax({
+    const data = await $.ajax({
         type: "GET",
         dataType: "json",
         url: host,
@@ -67,21 +67,21 @@ async function getTable(tableName) {
 }
 
 //@auther: Niels and Rasmus
-async function GetFoodItems(tableName,type) {
+async function GetFoodItems(tableName, type) {
 
     const data = await getTable(tableName)
 
     document.getElementById('ITEMS').innerHTML = `
         ${data.map(function (food) {
-            if (food.fldCategoryTypeId !== type.type) return
-            var item = JSON.stringify(food)
-            return `
+        if (food.fldCategoryTypeId !== type.type) return
+        var item = JSON.stringify(food)
+        return `
                 <div class = 'itemDesign'>
                 ${addJsonBreakfast(food)}
                 <button onclick='addToBasket(${item})'>Add to basket</button>
                 </div>
             `
-        }).join('')}
+    }).join('')}
     `
 }
 
@@ -146,16 +146,16 @@ async function makeShoppingCart(data) {
     if (data === null) return
     document.getElementById('shopCartItems').innerHTML = await `
         ${data[0].map(function (food) {
-            i++
-            //total = total + food.fldPrice * data[1][i - 1]
-            return `
+        i++
+        //total = total + food.fldPrice * data[1][i - 1]
+        return `
                     <div class="cart-item-design">
                         ${addOrder(food)}
                         <input class="Cart-Input" type="number" value="${data[1][i - 1]}"></input>
                         <button class="btnRemove" >Delete item</button>
                     </div>
             `
-        }).join('')}
+    }).join('')}
     `
     var inputs = document.getElementsByClassName('Cart-Input')
     for (var i = 0; i < inputs.length; i++) {
@@ -215,10 +215,10 @@ async function updateTotal() {
         var quantityElement = div.getElementsByClassName('Cart-Input')[0]
         var price = parseFloat(priceElement.innerText.replace(' kr', ''))
         var quantity = quantityElement.value
-        total = total + (price*quantity)
+        total = total + (price * quantity)
     }
     total = Math.round(total * 100) / 100
-    document.getElementsByClassName('cart-TOTAL')[0].innerText ='Total: ' + total + ' kr'
+    document.getElementsByClassName('cart-TOTAL')[0].innerText = 'Total: ' + total + ' kr'
 }
 
 //@author: Rasmus
@@ -280,7 +280,7 @@ async function postCartOrder(tableName, JsonData) {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
-            'ussr':'user'
+            'ussr': 'user'
         },
         body: JSON.stringify(JsonData)
     })
@@ -289,21 +289,21 @@ async function postCartOrder(tableName, JsonData) {
 
 //@author: Nicolaj & Niels
 //Our delete function
-async function deleteLunchBooking(tableName, JsonData) {
+async function deleteLunchBooking(tableName, id) {
     var host = APIurl
     host = host + tableName;
 
-      try {
-            let response = await fetch(`https://url/${id}`, {
-                method: "DELETE",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'ussr': 'user'
-                },
-            });
-        } catch (err) {
-        }
+    try {
+        let response = await fetch(host + "/" + id, {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json',
+                'ussr': 'user'
+            },
+        });
+    } catch (err) {
     }
+}
 
 
 let employees
@@ -432,13 +432,13 @@ async function getLunchItems(tableName) {
     const dates = calculateWeekDays();
     const data = await getTable(tableName)
 
-    document.getElementById("monday").innerHTML = 
+    document.getElementById("monday").innerHTML =
 
         `
         ${data.map(function (lunch) {
             if (!lunch.fldDate.includes(dates[0])) return
-        var lunchItem = JSON.stringify(lunch)
-        return `
+            var lunchItem = JSON.stringify(lunch)
+            return `
                   <div class = 'dayBox'>
                 ${addJsonLunch(lunch)}
                 <div class="checkBox">
@@ -449,7 +449,7 @@ async function getLunchItems(tableName) {
                 </div>
             </div>
             `
-    }).join('')}
+        }).join('')}
     `
 
     document.getElementById("tuesday").innerHTML =
@@ -530,9 +530,17 @@ async function getLunchItems(tableName) {
         }).join('')}
     `
 
-
+    updateSwitches()
 }
 
+async function updateSwitches() {
+    var dupeDays = await isLunchBooked();
+    document.getElementById("mondayCb").checked = dupeDays[0];
+    document.getElementById("tuesdayCb").checked = dupeDays[1];
+    document.getElementById("wednesdayCb").checked = dupeDays[2];
+    document.getElementById("thursdayCb").checked = dupeDays[3];
+    document.getElementById("fridayCb").checked = dupeDays[4];
+}
 
 function addJsonLunch(lunch) {
 
@@ -546,30 +554,70 @@ function addJsonLunch(lunch) {
         <p class="menuDescription">${lunch.fldMenuDescription}</p> `
 }
 
+async function isLunchBooked() {
+    var employeeID = (getEmployee().fldEmployeeId);
+    var daysList = calculateWeekDays();
+    var dupeDays = [false, false, false, false, false]
+
+    const data = await getTable('TblLunchBookings');
+    for (var i = 0; i < data.length; i++) {
+
+        for (var j = 0; j < daysList.length; j++) {
+            if (data[i].fldDate.includes(daysList[j]) && data[i].fldEmployeeId === employeeID) {
+                dupeDays[j] = true
+            }
+        }
+    }
+    return dupeDays
+}
+
 async function addRemoveLunch() {
 
     var employeeID = (getEmployee().fldEmployeeId);
     var daysList = calculateWeekDays();
+    var dupeDays = await isLunchBooked();
+    var DeleteDayIDs = [0, 0, 0, 0, 0]
+    var boolError = false;
 
+    var date = new Date
+    //alert(date.getDay())
 
     const data = await getTable('TblLunchBookings');
-    alert(data[0].fldEmployeeId);
-  
+    //alert(data[0].fldEmployeeId);
 
-    if (document.querySelector('#mondayCb:checked') !== null) {
+    //changeButtonTest()
 
+    // alert(data.length)
 
+    for (var i = 0; i < data.length; i++) {
+
+        for (var j = 0; j < DeleteDayIDs.length; j++) {
+            if (data[i].fldDate.includes(daysList[j]) && data[i].fldEmployeeId === employeeID) {
+                DeleteDayIDs[j] = data[i].fldLunchBookingId
+            }
+        }
+    }
+
+    //**MONDAY**
+    if (document.querySelector('#mondayCb:checked') !== null && !dupeDays[0] && date.getDay() === 1) {
+
+        //alert("Monday Create new entry")
         var makeLunchBooking = {
             fldEmployeeId: employeeID,
             fldDate: daysList[0]
         }
 
         await postCartOrder('TblLunchBookings', makeLunchBooking)
+    } else if (document.querySelector('#mondayCb:checked') === null && dupeDays[0] && date.getDay() === 1) {
+        //alert("Monday Item deleted")
+        deleteLunchBooking('TblLunchBookings', DeleteDayIDs[0])
+    } else if (date.getDay() !== 1) {
+        updateSwitches()
+        boolError = true;
     }
-    else {
-       
-    }
-    if (document.querySelector('#tuesdayCb:checked') !== null) {
+
+    //**TUESDAY**
+    if (document.querySelector('#tuesdayCb:checked') !== null && !dupeDays[1] && date.getDay() < 2 && date.getDay() > 0) {
 
         var makeLunchBooking = {
             fldEmployeeId: employeeID,
@@ -577,12 +625,16 @@ async function addRemoveLunch() {
         }
 
         await postCartOrder('TblLunchBookings', makeLunchBooking)
-    }
-    else {
-       
+    } else if (document.querySelector('#tuesdayCb:checked') === null && dupeDays[1] && date.getDay() < 2 && date.getDay() > 0) {
+        deleteLunchBooking('TblLunchBookings', DeleteDayIDs[1])
+    } else if (!(date.getDay() < 2 && date.getDay() > 0)) {
+        updateSwitches()
+        boolError = true;
     }
 
-    if (document.querySelector('#wednesdayCb:checked') !== null) {
+
+    //**WEDNESDAY**
+    if (document.querySelector('#wednesdayCb:checked') !== null && !dupeDays[2] && date.getDay() < 3 && date.getDay() > 0) {
 
         var makeLunchBooking = {
             fldEmployeeId: employeeID,
@@ -590,11 +642,16 @@ async function addRemoveLunch() {
         }
 
         await postCartOrder('TblLunchBookings', makeLunchBooking)
+    } else if (document.querySelector('#wednesdayCb:checked') === null && dupeDays[2] && date.getDay() < 3 && date.getDay() > 0) {
+        deleteLunchBooking('TblLunchBookings', DeleteDayIDs[2])
+    } else if (!(date.getDay() < 3 && date.getDay() > 0)) {
+        updateSwitches()
+        boolError = true;
     }
-    else {
-      
-    }
-    if (document.querySelector('#thursdayCb:checked') !== null) {
+
+
+    //**THURSDAY**
+    if (document.querySelector('#thursdayCb:checked') !== null && !dupeDays[3] && date.getDay() < 4 && date.getDay() > 0) {
 
         var makeLunchBooking = {
             fldEmployeeId: employeeID,
@@ -602,11 +659,16 @@ async function addRemoveLunch() {
         }
 
         await postCartOrder('TblLunchBookings', makeLunchBooking)
+    } else if (document.querySelector('#thursdayCb:checked') === null && dupeDays[3] && date.getDay() < 4 && date.getDay() > 0) {
+        deleteLunchBooking('TblLunchBookings', DeleteDayIDs[3])
+    } else if (!(date.getDay() < 4 && date.getDay() > 0)) {
+        updateSwitches()
+        boolError = true;
     }
-    else {
-       
-    }
-    if (document.querySelector('#fridayCb:checked') !== null) {
+
+
+    //**FRIDAY**
+    if (document.querySelector('#fridayCb:checked') !== null && !dupeDays[4] && date.getDay() < 5 && date.getDay() > 0) {
 
         var makeLunchBooking = {
             fldEmployeeId: employeeID,
@@ -614,9 +676,15 @@ async function addRemoveLunch() {
         }
 
         await postCartOrder('TblLunchBookings', makeLunchBooking)
+    } else if (document.querySelector('#fridayCb:checked') === null && dupeDays[4] && date.getDay() < 5 && date.getDay() > 0) {
+        deleteLunchBooking('TblLunchBookings', DeleteDayIDs[4])
+    } else if (!(date.getDay() < 5 && date.getDay() > 0)) {
+        updateSwitches()
+        boolError = true;
     }
-    else {
-       
+
+    if (boolError) {
+        alert("Cannot change orders from prior days!")
     }
 
 }
@@ -674,7 +742,7 @@ function calculateMonday(weekDay) {
         return mondayDate;
     }
     else if (weekDay === "Wednesday") {
-      
+
         mondayDate = (date.addDays(-2));
         return mondayDate;
     }
@@ -701,56 +769,55 @@ function calculateMonday(weekDay) {
 }
 
 
-    function calculateWeekDays()
-    {
+function calculateWeekDays() {
 
-        var mondayDate = calculateMonday();
+    var mondayDate = calculateMonday();
 
-        const days = [];
-        days[0] = mondayDate;
-        days[1] = mondayDate.addDays(1);
-        days[2] = mondayDate.addDays(2);
-        days[3] = mondayDate.addDays(3);
-        days[4] = mondayDate.addDays(4);
-        days[5] = mondayDate.addDays(5);
-        days[6] = mondayDate.addDays(6);
+    const days = [];
+    days[0] = mondayDate;
+    days[1] = mondayDate.addDays(1);
+    days[2] = mondayDate.addDays(2);
+    days[3] = mondayDate.addDays(3);
+    days[4] = mondayDate.addDays(4);
+    days[5] = mondayDate.addDays(5);
+    days[6] = mondayDate.addDays(6);
 
-        
-  
 
-        for (var i = 0; i < days.length; i++) {
 
-          
 
-            //Set here because you cant get the fucking month value inside this shit.
-            var dateForDate = days[i].getDate();
-            var monthForDate = (days[i].getMonth() + 1);
-            var yearForDate = days[i].getFullYear();
-            
+    for (var i = 0; i < days.length; i++) {
 
-          //  alert(dateForDate + " " + yearForDate + " " + monthForDate);
 
-            days[i] = yearForDate + '-' + monthForDate + '-' + dateForDate;
 
-            if (dateForDate <= 9) {
+        //Set here because you cant get the fucking month value inside this shit.
+        var dateForDate = days[i].getDate();
+        var monthForDate = (days[i].getMonth() + 1);
+        var yearForDate = days[i].getFullYear();
 
-                days[i] = yearForDate + '-' + monthForDate + '-' + '0' + dateForDate;
 
-                if (monthForDate <= 9) {
-                  
-                    days[i] = yearForDate + '-' + '0' + monthForDate + '-' + '0' + dateForDate;
-                }
+        //  alert(dateForDate + " " + yearForDate + " " + monthForDate);
 
+        days[i] = yearForDate + '-' + monthForDate + '-' + dateForDate;
+
+        if (dateForDate <= 9) {
+
+            days[i] = yearForDate + '-' + monthForDate + '-' + '0' + dateForDate;
+
+            if (monthForDate <= 9) {
+
+                days[i] = yearForDate + '-' + '0' + monthForDate + '-' + '0' + dateForDate;
             }
 
-            if (monthForDate <= 9 && dateForDate >= 10) {
-
-                days[i] = yearForDate + '-' + '0' + monthForDate + '-' + dateForDate;
-            }
-            
         }
 
-        return days;
+        if (monthForDate <= 9 && dateForDate >= 10) {
+
+            days[i] = yearForDate + '-' + '0' + monthForDate + '-' + dateForDate;
+        }
+
+    }
+
+    return days;
 }
-   
+
 
