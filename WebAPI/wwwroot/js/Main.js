@@ -22,6 +22,7 @@ function getEmployee() {
     return JSON.parse(sessionStorage.getItem('EmployeeKey'))
 }
 
+
 //@auther: Nicolaj
 function idleLogout() {
     var timer;
@@ -39,7 +40,7 @@ function idleLogout() {
     //@auther: Nicolaj
     function resetTimer() {
         clearTimeout(timer);
-        timer = setTimeout(resetToIndexFunction, 20000);  // time is in milliseconds
+        timer = setTimeout(resetToIndexFunction, 200000);  // time is in milliseconds
     }
 }
 
@@ -286,6 +287,25 @@ async function postCartOrder(tableName, JsonData) {
     console.log(response.json())
 }
 
+//@author: Nicolaj & Niels
+//Our delete function
+async function deleteLunchBooking(tableName, JsonData) {
+    var host = APIurl
+    host = host + tableName;
+
+      try {
+            let response = await fetch(`https://url/${id}`, {
+                method: "DELETE",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'ussr': 'user'
+                },
+            });
+        } catch (err) {
+        }
+    }
+
+
 let employees
 
 //@author: Rasmus
@@ -421,13 +441,13 @@ async function getLunchItems(tableName) {
         return `
                   <div class = 'dayBox'>
                 ${addJsonLunch(lunch)}
-            </div>
                 <div class="checkBox">
                 <label class="switch">
-                    <input type="checkbox">
+                    <input type="checkbox" id="mondayCb">
                     <span class="slider round"></span>
                 </label>
                 </div>
+            </div>
             `
     }).join('')}
     `
@@ -441,13 +461,14 @@ async function getLunchItems(tableName) {
             return `
                   <div class = 'dayBox'>
                 ${addJsonLunch(lunch)}
-            </div>
+           
                 <div class="checkBox">
                 <label class="switch">
-                    <input type="checkbox" id="tuesday" onclick="addRemoveLunch">
+                    <input type="checkbox" id="tuesdayCb">
                     <span class="slider round"></span>
                 </label>
                 </div>
+</div>
             `
         }).join('')}
     `
@@ -460,13 +481,13 @@ async function getLunchItems(tableName) {
             return `
                 <div class = 'dayBox'>
                 ${addJsonLunch(lunch)}
-            </div>
                 <div class="checkBox">
                 <label class="switch">
-                    <input type="checkbox">
+                    <input type="checkbox" id="wednesdayCb">
                     <span class="slider round"></span>
                 </label>
                 </div>
+            </div>
             `
         }).join('')}
     `
@@ -479,13 +500,13 @@ async function getLunchItems(tableName) {
             return `
                   <div class = 'dayBox'>
                 ${addJsonLunch(lunch)}
-            </div>
                 <div class="checkBox">
                 <label class="switch">
-                    <input type="checkbox">
+                    <input type="checkbox" id="thursdayCb">
                     <span class="slider round"></span>
                 </label>
                 </div>
+            </div>
             `
         }).join('')}
     `
@@ -498,13 +519,13 @@ async function getLunchItems(tableName) {
             return `
                 <div class = 'dayBox'>
                 ${addJsonLunch(lunch)}
-            </div>
                 <div class="checkBox">
                 <label class="switch">
-                    <input type="checkbox">
+                    <input type="checkbox" id="fridayCb">
                     <span class="slider round"></span>
                 </label>
                 </div>
+            </div>
             `
         }).join('')}
     `
@@ -525,7 +546,78 @@ function addJsonLunch(lunch) {
         <p class="menuDescription">${lunch.fldMenuDescription}</p> `
 }
 
-function addRemoveFood() {
+async function addRemoveLunch() {
+
+    var employeeID = (getEmployee().fldEmployeeId);
+    var daysList = calculateWeekDays();
+
+
+    const data = await getTable('TblLunchBookings');
+    alert(data[0].fldEmployeeId);
+  
+
+    if (document.querySelector('#mondayCb:checked') !== null) {
+
+
+        var makeLunchBooking = {
+            fldEmployeeId: employeeID,
+            fldDate: daysList[0]
+        }
+
+        await postCartOrder('TblLunchBookings', makeLunchBooking)
+    }
+    else {
+       
+    }
+    if (document.querySelector('#tuesdayCb:checked') !== null) {
+
+        var makeLunchBooking = {
+            fldEmployeeId: employeeID,
+            fldDate: daysList[1]
+        }
+
+        await postCartOrder('TblLunchBookings', makeLunchBooking)
+    }
+    else {
+       
+    }
+
+    if (document.querySelector('#wednesdayCb:checked') !== null) {
+
+        var makeLunchBooking = {
+            fldEmployeeId: employeeID,
+            fldDate: daysList[2]
+        }
+
+        await postCartOrder('TblLunchBookings', makeLunchBooking)
+    }
+    else {
+      
+    }
+    if (document.querySelector('#thursdayCb:checked') !== null) {
+
+        var makeLunchBooking = {
+            fldEmployeeId: employeeID,
+            fldDate: daysList[3]
+        }
+
+        await postCartOrder('TblLunchBookings', makeLunchBooking)
+    }
+    else {
+       
+    }
+    if (document.querySelector('#fridayCb:checked') !== null) {
+
+        var makeLunchBooking = {
+            fldEmployeeId: employeeID,
+            fldDate: daysList[4]
+        }
+
+        await postCartOrder('TblLunchBookings', makeLunchBooking)
+    }
+    else {
+       
+    }
 
 }
 
@@ -613,8 +705,6 @@ function calculateMonday(weekDay) {
     {
 
         var mondayDate = calculateMonday();
-
-        
 
         const days = [];
         days[0] = mondayDate;

@@ -7,73 +7,70 @@
     <link rel="icon" type="image/x-icon" href="/IMG/favicon.ico">
 </head>
 <body>
-<main id="app">
-    <div class="cart-icon"><a href="shoppingcart.html"><img src="IMG/shoppingCart.png" alt=""/></a></div>
+    <main id="app">
+        <div class="cart-icon"><a href="shoppingcart.html"><img src="IMG/shoppingCart.png" alt="" /></a></div>
 
-    <header>
-        <div class="Items">
-            <div class="Item"><a href="frontpage.html"><img src="IMG/back.png" alt=""></a></div>
-            <div class="Item Item-Logo"><img class="logo-img" src="IMG/logo.png" alt=""></div>
-            <div class="Item"><h3 id="Employee"></h3></div>
-            <div class="Item cart-icon"><a href="shoppingcart.html"><img src="IMG/shoppingCart.png" alt="" /></a></div>
-        </div>
-    </header>
-
-    <section>
-        <div id="monday" class="dayBox">
-            <div class="checkBox">
-                <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider round"></span>
-                </label>
+        <header>
+            <div class="Items">
+                <div class="Item"><a href="frontpage.html"><img src="IMG/back.png" alt=""></a></div>
+                <div class="Item Item-Logo"><img class="logo-img" src="IMG/logo.png" alt=""></div>
+                <div class="Item"><h3 id="Employee"></h3></div>
+                <div class="Item cart-icon"><a href="shoppingcart.html"><img src="IMG/shoppingCart.png" alt="" /></a></div>
             </div>
-        </div>
+        </header>
 
-        <div id="tuesday" class="dayBox">
-            <div class="checkBox">
-                <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider round"></span>
-                </label>
+        <section>
+            <div id="monday" class="dayBox">
+                <div class="checkBox">
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
             </div>
-        </div>
 
-        <div id="wednesday" class="dayBox">
-            <div class="checkBox">
-                <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider round"></span>
-                </label>
+            <div id="tuesday" class="dayBox">
+                <div class="checkBox">
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
             </div>
-        </div>
 
-        <div id="thursday" class="dayBox">
-            <div class="checkBox">
-                <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider round"></span>
-                </label>
+            <div id="wednesday" class="dayBox">
+                <div class="checkBox">
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
             </div>
-        </div>
 
-        <div id="friday" class="dayBox">
-            <div class="checkBox">
-                <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider round"></span>
-                </label>
+            <div id="thursday" class="dayBox">
+                <div class="checkBox">
+                </div>
             </div>
-        </div>
-    </section>
-</main>
-<script src="js/jquery-3.6.0.min.js"></script>
-<script src="JS/Main.js"></script>
-<script>
-    window.onload = function () {
-        idleLogout()
-        loadEmployeeName()
-        getLunchItems("TblLunches")
-    }
-</script>
+
+            <div id="friday" class="dayBox">
+                <div class="checkBox">
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+            <button onclick="addRemoveLunch()">PRESS ME BITCH!</button>
+        </section>
+    </main>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="JS/Main.js"></script>
+    <script>
+        window.onload = function () {
+            idleLogout()
+            loadEmployeeName()
+            getLunchItems("TblLunches")
+        }
+    </script>
 </body>
 </html>
