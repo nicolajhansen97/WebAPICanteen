@@ -1,4 +1,4 @@
-const APIurl = 'https://localhost:5001/api/'
+const APIurl = 'https://localhost:44355/api/'
 
 
 //@author: Rasmus
@@ -425,7 +425,11 @@ function formatDate(date) {
 }
 
 
-//Nicolaj TEST LUNCH - DONT FUCKING TOUCH
+
+/*
+ * @author Nicolaj & Niels
+ * 
+ */
 
 async function getLunchItems(tableName) {
 
@@ -533,6 +537,10 @@ async function getLunchItems(tableName) {
     updateSwitches()
 }
 
+/*
+ * @author Nicolaj & Niels
+ *
+ */
 async function updateSwitches() {
     var dupeDays = await isLunchBooked();
     document.getElementById("mondayCb").checked = dupeDays[0];
@@ -542,6 +550,11 @@ async function updateSwitches() {
     document.getElementById("fridayCb").checked = dupeDays[4];
 }
 
+
+/*
+ * @author Nicolaj & Niels
+ *
+ */
 function addJsonLunch(lunch) {
 
 
@@ -554,6 +567,11 @@ function addJsonLunch(lunch) {
         <p class="menuDescription">${lunch.fldMenuDescription}</p> `
 }
 
+
+/*
+ * @author Nicolaj & Niels
+ *
+ */
 async function isLunchBooked() {
     var employeeID = (getEmployee().fldEmployeeId);
     var daysList = calculateWeekDays();
@@ -571,6 +589,11 @@ async function isLunchBooked() {
     return dupeDays
 }
 
+
+/*
+ * @author Nicolaj & Niels
+ *
+ */
 async function addRemoveLunch() {
 
     var employeeID = (getEmployee().fldEmployeeId);
@@ -580,14 +603,9 @@ async function addRemoveLunch() {
     var boolError = false;
 
     var date = new Date
-    //alert(date.getDay())
 
     const data = await getTable('TblLunchBookings');
-    //alert(data[0].fldEmployeeId);
 
-    //changeButtonTest()
-
-    // alert(data.length)
 
     for (var i = 0; i < data.length; i++) {
 
@@ -689,6 +707,10 @@ async function addRemoveLunch() {
 
 }
 
+/*
+ * @Stackoverflow
+ * Fuction take a day and create a new day according to the day you add. 
+ */
 Date.prototype.addDays = function (days) {
     var date = new Date(this.valueOf());
     date.setDate(date.getDate() + days);
@@ -716,22 +738,16 @@ function getWhichKindOfDay() {
     }
 }
 
-function getTheDate() {
-
-    var todaysDate = new Date();
-    //var datetime = now.getFullYear() + '/' + (now.getMonth() + 1) + '/' + now.getDate();
-
-    return todaysDate;
-}
-
+/*
+ * @author Nicolaj & Niels
+ *
+ */
 function calculateMonday(weekDay) {
 
     var mondayDate;
 
     weekDay = getWhichKindOfDay();
     var date = new Date();
-
-    //alert("Weekdate: " + weekDay + "//" + "Date: " + date);
 
     if (weekDay === "Monday") {
         mondayDate = date;
@@ -769,6 +785,10 @@ function calculateMonday(weekDay) {
 }
 
 
+/*
+ * @author Nicolaj & Niels
+ *
+ */
 function calculateWeekDays() {
 
     var mondayDate = calculateMonday();
@@ -782,20 +802,12 @@ function calculateWeekDays() {
     days[5] = mondayDate.addDays(5);
     days[6] = mondayDate.addDays(6);
 
-
-
-
     for (var i = 0; i < days.length; i++) {
 
-
-
-        //Set here because you cant get the fucking month value inside this shit.
+        //Set here because you because it cant be set inside, as JS cant figure this out.
         var dateForDate = days[i].getDate();
         var monthForDate = (days[i].getMonth() + 1);
         var yearForDate = days[i].getFullYear();
-
-
-        //  alert(dateForDate + " " + yearForDate + " " + monthForDate);
 
         days[i] = yearForDate + '-' + monthForDate + '-' + dateForDate;
 
