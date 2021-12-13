@@ -1,4 +1,4 @@
-const APIurl = 'https://localhost:44355/api/'
+const APIurl = 'https://localhost:5001/api/'
 
 
 //@author: Rasmus
@@ -410,13 +410,13 @@ function getSwipeButton() {
 
 
 //DATE TEST
-
+//NOT MADE BY US
 function dateComponentPad(value) {
     var format = String(value);
 
     return format.length < 2 ? '0' + format : format;
 }
-
+//NOT MADE BY US
 function formatDate(date) {
     var datePart = [date.getFullYear(), date.getMonth() + 1, date.getDate()].map(dateComponentPad);
     var timePart = [date.getHours(), date.getMinutes(), date.getSeconds()].map(dateComponentPad);
@@ -437,13 +437,11 @@ async function getLunchItems(tableName) {
     const data = await getTable(tableName)
 
     document.getElementById("monday").innerHTML =
-
         `
         ${data.map(function (lunch) {
             if (!lunch.fldDate.includes(dates[0])) return
             var lunchItem = JSON.stringify(lunch)
             return `
-                  <div class = 'dayBox'>
                 ${addJsonLunch(lunch)}
                 <div class="checkBox">
                 <label class="switch">
@@ -451,7 +449,6 @@ async function getLunchItems(tableName) {
                     <span class="slider round"></span>
                 </label>
                 </div>
-            </div>
             `
         }).join('')}
     `
@@ -463,7 +460,6 @@ async function getLunchItems(tableName) {
             if (!lunch.fldDate.includes(dates[1])) return
             var lunchItem = JSON.stringify(lunch)
             return `
-                  <div class = 'dayBox'>
                 ${addJsonLunch(lunch)}
            
                 <div class="checkBox">
@@ -472,7 +468,6 @@ async function getLunchItems(tableName) {
                     <span class="slider round"></span>
                 </label>
                 </div>
-</div>
             `
         }).join('')}
     `
@@ -483,7 +478,6 @@ async function getLunchItems(tableName) {
             if (!lunch.fldDate.includes(dates[2])) return
             var lunchItem = JSON.stringify(lunch)
             return `
-                <div class = 'dayBox'>
                 ${addJsonLunch(lunch)}
                 <div class="checkBox">
                 <label class="switch">
@@ -491,7 +485,6 @@ async function getLunchItems(tableName) {
                     <span class="slider round"></span>
                 </label>
                 </div>
-            </div>
             `
         }).join('')}
     `
@@ -502,7 +495,6 @@ async function getLunchItems(tableName) {
             if (!lunch.fldDate.includes(dates[3])) return
             var lunchItem = JSON.stringify(lunch)
             return `
-                  <div class = 'dayBox'>
                 ${addJsonLunch(lunch)}
                 <div class="checkBox">
                 <label class="switch">
@@ -510,7 +502,6 @@ async function getLunchItems(tableName) {
                     <span class="slider round"></span>
                 </label>
                 </div>
-            </div>
             `
         }).join('')}
     `
@@ -521,7 +512,6 @@ async function getLunchItems(tableName) {
             if (!lunch.fldDate.includes(dates[4])) return
             var lunchItem = JSON.stringify(lunch)
             return `
-                <div class = 'dayBox'>
                 ${addJsonLunch(lunch)}
                 <div class="checkBox">
                 <label class="switch">
@@ -529,7 +519,6 @@ async function getLunchItems(tableName) {
                     <span class="slider round"></span>
                 </label>
                 </div>
-            </div>
             `
         }).join('')}
     `
@@ -563,8 +552,11 @@ function addJsonLunch(lunch) {
         <p class="theDate">${lunch.fldDate.replace("T00:00:00", "")}</p>
         <p class="menu">Menu:</p>
         <p class="menuName">${lunch.fldMenu}</p>
+        <div class="description-div">
         <p class="description">Description:</p>
-        <p class="menuDescription">${lunch.fldMenuDescription}</p> `
+        <p class="menuDescription">${lunch.fldMenuDescription}</p>
+        </div>
+        `
 }
 
 

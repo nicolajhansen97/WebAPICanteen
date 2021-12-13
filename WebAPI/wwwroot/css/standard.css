@@ -192,17 +192,19 @@ section {
 {
     background: darkslateblue;
     width: 14%;
-    height: 600px;
+    height: 100%;
     border-radius: 20px;
     float: left;
     margin-left: 5%;
+    position:relative;
 }
 
 .checkBox {
-    padding-top: 16%;
-    padding-left: 5%;
+    left:50%;
+    transform: translateX(-50%);
     margin-bottom: 5%;
-    position: fixed;
+    position: absolute;
+    bottom:0;
 }
 
 /* The switch - the box around the slider */
@@ -268,46 +270,55 @@ input:checked + .slider:before {
     border-radius: 50%;
 }
 
-.dateName
-{
-    padding-left: 270%;
-    padding-top: 70%;
+
+.lunch-Section{
+    margin-top:10%;
+    height:70vh;
+}
+
+.dateName {
+    padding-top: 10%;
+    padding-left:5%;
     color: green;
 }
 
-.theDate
-{
-    padding-left: 270%;
-    color:orange;
+.theDate {
+    padding-left: 5%;
+    color: orange;
 }
 
 .menu {
-
-    padding-top: 100%;
-    padding-left: 270%;
+    padding-top: 10%;
+    padding-left: 5%;
     color: pink;
 }
 
 .menuName {
-    padding-left: 270%;
+    padding-left: 5%;
     color: gold;
 }
 
+.description-div {
+    padding-top: 20%;
+    padding-left: 5%;
+    top: 30%;
+    position: absolute;
+}
+
 .description {
-    padding-top: 150%;
-    padding-left: 270%;
     color: pink;
 }
 
 .menuDescription {
-    padding-left: 270%;
     color: gold;
 }
 
+.lunch-Section button {
+    margin-left: 50%;
+    transform: translateX(-50%)
+}
 /* ?-Frontpage
 ======================*/
-
-
 .Employee-id {
     border: 1px solid black;
 }
