@@ -27,7 +27,14 @@ namespace WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-      
+
+           /*services.AddCors(options => options.AddDefaultPolicy(options => {
+
+                options.AllowAnyMethod();
+                options.AllowAnyHeader();
+                options.AllowAnyOrigin();
+            }));
+           */
             services.AddDbContext<canteenSystemContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:canteenSystem"]));
 
             services.AddControllersWithViews()
@@ -49,10 +56,15 @@ namespace WebAPI
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+         
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
+          //  app.UseCors();
+
+
 
             app.UseAuthorization();
 
