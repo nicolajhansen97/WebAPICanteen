@@ -82,14 +82,24 @@ header {
 
 /* Header Login */
 
-section {
-    margin-top: 10%;
+.index-section {
+    top: 50%;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.index-img{
+    width:188px;
+    height: auto;
+    margin-left:16%;
+    margin-top:11%;
 }
 
 .center {
     background: white;
-    width: 350px;
-    height: 200px;
+    width: 300px;
+    height: 330px;
     padding: 10px;
     border-radius: 10px;
     margin: 0 auto;
@@ -104,18 +114,16 @@ section {
     padding: 10px 0 20px 0;
 }
 
-.description {
-    font-size: 15px;
-}
-
 .cardNumber {
     padding-top: 55px;
     animation: left-to-right 6s ease-in-out infinite alternate;
 }
 
-.testText {
-    text-align: center;
-    padding-top: 40px;
+.Login-Input {
+    text-align: center; 
+    filter: opacity(0);
+    width: 0;
+    overflow: hidden;
 }
 
 @keyframes left-to-right {
@@ -144,9 +152,11 @@ section {
 ======================*/
 
 .frontpage-section {
-    margin-top: 13%;
     display: flex;
     justify-content: space-evenly;
+    position:inherit;
+    top:50%;
+    transform:translateY(-50%);
 }
 
 .breakfast {
@@ -337,14 +347,6 @@ input:checked + .slider:before {
     z-index: 2;
     top: 30px;*/
     right: 16px;
-}
-
-#Employee-password {
-    /* When we have the card reader
-    filter: opacity(0);
-    width: 0;
-    overflow: hidden;
-    */
 }
 
 .itemDesign {

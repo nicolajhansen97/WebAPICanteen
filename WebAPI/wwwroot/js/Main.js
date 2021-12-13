@@ -1,4 +1,4 @@
-const APIurl = 'https://localhost:44355/api/'
+const APIurl = 'https://localhost:5001/api/'
 
 
 //@author: Rasmus
