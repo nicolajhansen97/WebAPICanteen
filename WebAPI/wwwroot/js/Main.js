@@ -1,4 +1,4 @@
-const APIurl = 'https://localhost:5001/api/'
+const APIurl = 'https://localhost:44355/api/'
 
 
 //@author: Rasmus
@@ -696,7 +696,9 @@ async function addRemoveLunch() {
     if (boolError) {
         alert("Cannot change orders from prior days!")
     }
-
+    else {
+        alert("Your changes to your lunchplan have been saved!");
+    }
 }
 
 /*

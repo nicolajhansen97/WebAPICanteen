@@ -315,6 +315,7 @@ input:checked + .slider:before {
 
 .lunch-Section button {
     margin-left: 50%;
+    margin-top: 1%;
     transform: translateX(-50%)
 }
 /* ?-Frontpage
