@@ -44,13 +44,17 @@ function idleLogout() {
     }
 }
 
-//@auther: Niels and Rasmus
+/*@auther: Niels and Rasmus
+ * Logs out the account and clears sessionstorage
+ */ 
 function Logout() {
     location.href = 'index.html';
     sessionStorage.clear()
 }
 
-//@auther: Niels and Rasmus
+/*@auther: Niels and Rasmus
+ * Here we get all food item values using ajax
+ */ 
 async function getTable(tableName) {
     var host = APIurl
     host = host + tableName;
@@ -66,7 +70,9 @@ async function getTable(tableName) {
     return data
 }
 
-//@auther: Niels and Rasmus
+/*@auther: Niels and Rasmus
+ * This method make the food items from JSON to html classes
+ */ 
 async function GetFoodItems(tableName, type) {
 
     const data = await getTable(tableName)
@@ -87,7 +93,11 @@ async function GetFoodItems(tableName, type) {
 
 
 
-//@auther: Niels and Rasmus
+/*@auther: Niels and Rasmus
+ * The basket is an 2d array, containing item[0] and amount[1]. Before an item is pushed onto the array it is first checked if it is
+ * there, if it is there the amount increases instead of a new item being added there. If it isnt there a new item with an amount of
+ * 1 is added.
+ */
 function addToBasket(Item) {
 
     var isItem = true
@@ -102,9 +112,7 @@ function addToBasket(Item) {
 
     array[0].forEach(ArrayItem => {
         if (Item.fldItemInfoId === ArrayItem.fldItemInfoId) {
-
-            isItem = false
-            //array2[i]++    
+            isItem = false  
             array[1][i]++
         }
         i++
@@ -112,15 +120,14 @@ function addToBasket(Item) {
     if (isItem) {
         array[0].push(Item)
         array[1].push(1)
-        //array2.push(1)
     }
-    //console.log(JSON.stringify(array[0]) + " " + array[1])
-
     // Store
     sessionStorage.setItem("items", JSON.stringify(array));
 }
 
-//@auther: Niels and Rasmus
+/*@auther: Niels and Rasmus
+ * Helps create the HTML object with relvant JSON data
+ */ 
 function addJsonBreakfast(food) {
     return `
         <p class="foodTitle">${food.fldItemname}</p>
@@ -140,7 +147,9 @@ function addOrder(food) {
 
 let total = 0
 
-//@auther: Niels and Rasmus
+/*@auther: Niels and Rasmus
+ * After the JSON file has ben obtained we split up the data and place it in individual HTML objects.
+ */ 
 async function makeShoppingCart(data) {
     var i = 0
     if (data === null) return
@@ -170,7 +179,10 @@ async function makeShoppingCart(data) {
     updateTotal()
 }
 
-//@auther: Niels and Rasmus
+/*@auther: Niels and Rasmus
+ * Changes the quatity based on and event value that is changed by pressing up or down buttons. If the value goes to below 0 it will 
+ * be set to 1 as you can not have 0 or under quantity
+ */ 
 function quantityChanged(event) {
     var input = event.target
     if (isNaN(input.value) || input.value <= 0) {
@@ -187,7 +199,9 @@ function quantityChanged(event) {
     updateTotal()
 }
 
-//@auther: Niels and Rasmus
+/*@auther: Niels and Rasmus
+ * By selecting an item it goes through a loop of stored items to remove it from the list and from the html
+ */ 
 function itemDeleted(event) {
     var input = event.target
     //session
@@ -204,7 +218,9 @@ function itemDeleted(event) {
     updateTotal()
 }
 
-//@auther: Niels and Rasmus
+/*@auther: Niels and Rasmus
+ * This calcultes the total price base on the price elements in our HTML
+ */
 async function updateTotal() {
     var mainDiv = await document.getElementById('shopCartItems')
     var secondDivs = mainDiv.getElementsByClassName('cart-item-design')
@@ -428,7 +444,7 @@ function formatDate(date) {
 
 /*
  * @author Nicolaj & Niels
- * 
+ * This get the lunches from the database
  */
 
 async function getLunchItems(tableName) {
@@ -528,7 +544,7 @@ async function getLunchItems(tableName) {
 
 /*
  * @author Nicolaj & Niels
- *
+ * Updates the switches for when you enter lunch order page
  */
 async function updateSwitches() {
     var dupeDays = await isLunchBooked();
@@ -542,7 +558,7 @@ async function updateSwitches() {
 
 /*
  * @author Nicolaj & Niels
- *
+ * Creates the box with lunches from DB
  */
 function addJsonLunch(lunch) {
 
@@ -562,7 +578,8 @@ function addJsonLunch(lunch) {
 
 /*
  * @author Nicolaj & Niels
- *
+ * This checks if the day has been booked, and is used to set the days as books before you enter the lunch page. It also helps 
+ * when adding or removing orders, to see if it is already there.
  */
 async function isLunchBooked() {
     var employeeID = (getEmployee().fldEmployeeId);
@@ -584,7 +601,8 @@ async function isLunchBooked() {
 
 /*
  * @author Nicolaj & Niels
- *
+ * This function adds or removes lunch orders depending on switches being on or off, it also checks if the days are already there
+ * so that when adding an order it will not do it twice
  */
 async function addRemoveLunch() {
 
@@ -733,14 +751,14 @@ function getWhichKindOfDay() {
 }
 
 /*
- * @author Nicolaj & Niels
- *
+ * @author Niels and Nicolaj
+ * This method returns a week date based on the current day
  */
-function calculateMonday(weekDay) {
+function calculateMonday() {
 
     var mondayDate;
 
-    weekDay = getWhichKindOfDay();
+    var weekDay = getWhichKindOfDay();
     var date = new Date();
 
     if (weekDay === "Monday") {
@@ -780,8 +798,8 @@ function calculateMonday(weekDay) {
 
 
 /*
- * @author Nicolaj & Niels
- *
+ * @author Niels and Nicolaj
+ * This method returns a list of days that are formatted to fit the dates of the database
  */
 function calculateWeekDays() {
 
@@ -822,7 +840,6 @@ function calculateWeekDays() {
         }
 
     }
-
     return days;
 }
 
