@@ -2,6 +2,12 @@ const APIurl = 'https://localhost:5001/api/'
 
 
 //@author: Rasmus
+//our Enum in javascript, its not as well made as in
+//c# or java, but its kind of works, though Stackoverflow
+//recommends that you also use something called freeze, but
+//we just needed a very simple enum, so we dident.
+//it just makes 2 objects with their number and has a 
+//constructor that gives it a type. 
 class ItemType {
     static BreakFast = new ItemType(1)
     static Other = new ItemType(2)
@@ -67,6 +73,14 @@ async function getTable(tableName) {
 }
 
 //@auther: Niels and Rasmus
+//This function is used to get fooditems from the database so breakfast and
+//other, we ask for tablename so we can get the url, and the type which is
+//an enum we use to see if it is an breakfast or other. after that we call
+//getTable to get a json object with all the items. then we get the div element
+//from the website where we want the add the items, we check what type it is.
+//then return a Full div element with a loop, but instead of a normal loop we use
+//a function called map. that does that for us. in the div we make we call on the
+//addjsonBreakfast method which is also a mehtod for creating a div.
 async function GetFoodItems(tableName, type) {
 
     const data = await getTable(tableName)
@@ -121,6 +135,9 @@ function addToBasket(Item) {
 }
 
 //@auther: Niels and Rasmus
+//Our function for making the div that holds the breakfast/other item. it
+//just gets the picture name, name of item, description of item and the price. 
+//and puts that in a div, and returns it.
 function addJsonBreakfast(food) {
     return `
         <p class="foodTitle">${food.fldItemname}</p>
@@ -222,6 +239,17 @@ async function updateTotal() {
 }
 
 //@author: Rasmus
+/* This is our function for purchasing the items in your cart
+    We first get the element that holds all the items in the cart
+    then we check if it is empty, wich alerts the user that he cant 
+    purhcase anything since there is nothing in the cart, and returns out
+    the vi get the employee, alerts the user that he has purchased the items.
+    make a new date object so we can get the date he purchased. 
+    then we make a json order and post it to the database
+    after that we get the all the items in a array with the sessionstorage
+    we loop through them and make a post on each item, and their count.
+    after that we go trough the ui and remove the ui for the items, we update the 
+    total, and make the user logout.*/
 async function purchaseClicked() {
     var cartItems = document.getElementById('shopCartItems')
     if (!cartItems.hasChildNodes()) {
@@ -232,21 +260,21 @@ async function purchaseClicked() {
     alert('Thank you for your purchase ' + em.fldName)
 
     //order
-    var d = new Date()
+    var date = new Date()
     //console.log(d.toLocaleDateString() + "T" + d.toLocaleTimeString())
 
     var makeorder = {
         fldEmployeeId: em.fldEmployeeId,
-        fldTimeStamp: formatDate(d)
+        fldTimeStamp: formatDate(date)
     }
 
-    await postCartOrder('TblOrders', makeorder)
+    await PostFunction('TblOrders', makeorder)
 
     //get array of orders
-    var array = JSON.parse(sessionStorage.getItem("items"))
+    var CartItemArray = JSON.parse(sessionStorage.getItem("items"))
     //loop post them
-    for (var i = 0; i < array[0].length; i++) {
-        for (var j = 0; j < array[1][i]; j++) {
+    for (var i = 0; i < CartItemArray[0].length; i++) {
+        for (var j = 0; j < CartItemArray[1][i]; j++) {
             //console.log(array[0][i])
             //post command to API WIP:NEED TO ADD JSONDATA
 
@@ -255,10 +283,10 @@ async function purchaseClicked() {
 
             var makeOrderLine = {
                 fldOrderId: order[order.length - 1].fldOrderId,
-                fldItemInfoId: array[0][i].fldItemInfoId,
-                fldPrice: array[0][i].fldPrice
+                fldItemInfoId: CartItemArray[0][i].fldItemInfoId,
+                fldPrice: CartItemArray[0][i].fldPrice
             }
-            await postCartOrder('TblOrderLines', makeOrderLine)
+            await PostFunction('TblOrderLines', makeOrderLine)
         }
     }
     //delete items in cart
@@ -267,12 +295,16 @@ async function purchaseClicked() {
     }
     updateTotal()
     //logout
-    //Logout()
+    Logout()
 }
 
 //@author: Rasmus
-//Our posting function
-async function postCartOrder(tableName, JsonData) {
+//This is the function we use to post so we can add data to the Database
+// we have 2 parameters a string(tableName) for wich table we want to post to so it would look like localhost:41421/api/tablename.
+//the other paremeter is for the json data we want to post. in the funcition we make the url, then call fetch with post.
+// we add the headers so the guard knows we are allowed to post, and it knows what content we are posting. then we console log 
+//the response so if we get an error in the post we can see what went wrong.
+async function PostFunction(tableName, JsonData) {
     var host = APIurl
     host = host + tableName;
 
@@ -374,7 +406,7 @@ function getSwipeButton() {
         }
         slider.addClass('unlocked');
         $('#locker').text('Purchased');
-        purchaseClicked()
+        purchaseClicked() // added by us.
         setTimeout(function () {
             slider.on('click tap', function (event) {
                 if (!slider.hasClass('unlocked'))
@@ -617,7 +649,7 @@ async function addRemoveLunch() {
             fldDate: daysList[0]
         }
 
-        await postCartOrder('TblLunchBookings', makeLunchBooking)
+        await PostFunction('TblLunchBookings', makeLunchBooking)
     } else if (document.querySelector('#mondayCb:checked') === null && dupeDays[0] && date.getDay() === 1) {
         //alert("Monday Item deleted")
         deleteLunchBooking('TblLunchBookings', DeleteDayIDs[0])
@@ -634,7 +666,7 @@ async function addRemoveLunch() {
             fldDate: daysList[1]
         }
 
-        await postCartOrder('TblLunchBookings', makeLunchBooking)
+        await PostFunction('TblLunchBookings', makeLunchBooking)
     } else if (document.querySelector('#tuesdayCb:checked') === null && dupeDays[1] && date.getDay() < 2 && date.getDay() > 0) {
         deleteLunchBooking('TblLunchBookings', DeleteDayIDs[1])
     } else if (!(date.getDay() < 2 && date.getDay() > 0)) {
@@ -651,7 +683,7 @@ async function addRemoveLunch() {
             fldDate: daysList[2]
         }
 
-        await postCartOrder('TblLunchBookings', makeLunchBooking)
+        await PostFunction('TblLunchBookings', makeLunchBooking)
     } else if (document.querySelector('#wednesdayCb:checked') === null && dupeDays[2] && date.getDay() < 3 && date.getDay() > 0) {
         deleteLunchBooking('TblLunchBookings', DeleteDayIDs[2])
     } else if (!(date.getDay() < 3 && date.getDay() > 0)) {
@@ -668,7 +700,7 @@ async function addRemoveLunch() {
             fldDate: daysList[3]
         }
 
-        await postCartOrder('TblLunchBookings', makeLunchBooking)
+        await PostFunction('TblLunchBookings', makeLunchBooking)
     } else if (document.querySelector('#thursdayCb:checked') === null && dupeDays[3] && date.getDay() < 4 && date.getDay() > 0) {
         deleteLunchBooking('TblLunchBookings', DeleteDayIDs[3])
     } else if (!(date.getDay() < 4 && date.getDay() > 0)) {
@@ -685,7 +717,7 @@ async function addRemoveLunch() {
             fldDate: daysList[4]
         }
 
-        await postCartOrder('TblLunchBookings', makeLunchBooking)
+        await PostFunction('TblLunchBookings', makeLunchBooking)
     } else if (document.querySelector('#fridayCb:checked') === null && dupeDays[4] && date.getDay() < 5 && date.getDay() > 0) {
         deleteLunchBooking('TblLunchBookings', DeleteDayIDs[4])
     } else if (!(date.getDay() < 5 && date.getDay() > 0)) {
